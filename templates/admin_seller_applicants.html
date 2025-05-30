@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/admin_applicants.css">
+    <title>Admin - Manage Applicants</title>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+            <h1>Books, Bytes and Blockbusters</h1>
+        </div>
+    </header>
+
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/admin">Dashboard</a></li>
+            <li><a href="">Accounts Management</a>
+                <ul class="submenu">
+                    <li><a href="/admin_users">Buyer</a></li>
+                    <li><a href="/admin_sellers">Seller</a></li>
+                    <li><a href="/view_user_applicants">Applicants</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="marketing-btn">Marketing</a>
+                <ul class="submenu">
+                    <li><a href="/admin/upload-promotion">Promotions</a></li>
+                    <li><a href="/admin/vouchers">Vouchers</a></li>
+                </ul>
+            </li>
+            <li><a href="#" class="marketing-btn">Customer Service</a>
+                <ul class="submenu">
+                    <li><a href="/admin_user_chat_management">Buyers</a></li>
+                    <li><a href="/admin_seller_chat_management">Sellers</a></li>
+                </ul>
+            </li>
+            <li><a href="/logout" class="account-btn">Logout</a></li>
+        </ul>
+    </aside>
+
+    <main>
+        <h2>Manage Applicants - Sellers</h2>
+
+        <div class="nav-container">
+            <div class="nav">
+                <a href="/view_user_applicants">Buyer Applicants</a>
+                <a href="/view_seller_applicants" style="color: crimson;">Seller Applicants</a>
+                <a href="/view_rejected_applicants">Rejected Applicants</a>
+            </div>
+        </div>
+
+        <table class="seller-table">
+            <thead>
+                <tr>
+                    <th>ID No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th class="actions-header">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for seller in sellers %}
+                <tr>
+                    <td>{{ seller['id'] }}</td>
+                    <td>{{ seller['first_name'] }} {{ seller['last_name'] }}</td>
+                    <td>{{ seller['email'] }}</td>
+                    <td>{{ seller['role'] }}</td>
+                    <td style="color: red;">Pending</td>
+                    <td class="action-buttons">
+                        <a href="{{ url_for('view_seller', seller_id=seller['id']) }}" class="btn">View Profile</a>
+                        <form method="POST" action="{{ url_for('update_seller_status') }}" onsubmit="event.preventDefault(); showConfirmation('Approve this application request?', this, 1);">
+                            <input type="hidden" name="seller_id" value="{{ seller['id'] }}">
+                            <input type="hidden" name="approved" value="1">
+                            <button type="submit" class="btn-success">Approve</button>
+                        </form>
+                        <form method="POST" action="{{ url_for('update_seller_status') }}" onsubmit="event.preventDefault(); showConfirmation('Reject this application request?', this, 0);">
+                            <input type="hidden" name="seller_id" value="{{ seller['id'] }}">
+                            <input type="hidden" name="approved" value="0">
+                            <button type="submit" class="btn-danger">Reject</button>
+                        </form>                        
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            
+            
+        </table>
+    </main>
+
+    <script>
+        function showConfirmation(message, form, isApproved) {
+            const confirmation = confirm(message);
+            if (confirmation) {
+                const formData = new FormData(form);
+                formData.append('approved', isApproved);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert(isApproved ? "Application approved successfully!" : "Application rejected successfully!");
+                        location.reload();
+                    } else {
+                        alert("An error occurred. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("An error occurred. Please try again.");
+                });
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/admin_applicants.css">
+    <title>Admin - Manage Applicants</title>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+            <h1>Books, Bytes, and Blockbusters</h1>
+        </div>
+    </header>
+
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/admin">Dashboard</a></li>
+            <li><a href="">Accounts Management</a></li>
+            <li><a href="/view_user_applicants">Buyer Applicants</a></li>
+            <li><a href="/view_seller_applicants" style="color: crimson;">Seller Applicants</a></li>
+        </ul>
+    </aside>
+
+    <main>
+        <h2>Manage Applicants - Sellers</h2>
+
+        <table class="seller-table">
+            <thead>
+                <tr>
+                    <th>ID No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for seller in sellers %}
+                <tr>
+                    <td>{{ seller.id }}</td>
+                    <td>{{ seller.first_name }} {{ seller.last_name }}</td>
+                    <td>{{ seller.email }}</td>
+                    <td>{{ seller.role }}</td>
+                    <td style="color: red;">Pending</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('update_seller_status') }}">
+                            <input type="hidden" name="seller_id" value="{{ seller.id }}">
+                            <button type="submit" name="approved" value="1" class="btn-success">Approve</button>
+                            <button type="submit" name="approved" value="0" class="btn-danger">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>
+ -->

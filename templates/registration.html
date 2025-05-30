@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <link rel="stylesheet" href="../static/reg-style.css">
+</head>
+<body data-success="{{ success }}">
+
+<div class="registration-container" id="signup">
+    <form action="/register" method="POST" enctype="multipart/form-data">
+        <h2 class="form-title">Registration</h2>
+
+        <div class="input-group">
+            <input type="hidden" name="role" value="buyer">
+            <label for="first_name">First Name</label>
+            <input type="text" name="first_name" placeholder="First Name" required>
+
+            <label for="last_name">Last Name</label>
+            <input type="text" name="last_name" placeholder="Last Name" required>
+
+            <label for="password">Password</label>
+            <input type="password" name="password" placeholder="Password" required>
+            
+            <label for="confirm-password">Confirm Password</label>
+            <input type="password" name="confirm-password" placeholder="Confirm Password" required>
+            
+            <label for="email">Email</label>
+            <input type="email" name="email" placeholder="Email" required>
+
+            <label for="phone_number">Phone Number:</label>
+            <input type="tel" name="phone_number" placeholder="###########" pattern="[0-9]{10,15}" required>
+        </div>
+
+        <div class="location">
+            <label for="province">Province</label>
+            <select id="province" name="province" required>
+                <option value="" disabled selected>Select Province</option>
+            </select>
+        
+            <label for="city">City</label>
+            <select id="city" name="city" required>
+                <option value="" disabled selected>Select City</option>
+            </select>
+        
+            <label for="barangay">Barangay</label>
+            <select id="barangay" name="barangay" required>
+                <option value="" disabled selected>Select Barangay</option>
+            </select>
+
+            <label for="street">Street</label>
+            <input type="text" name="street" placeholder="Street" required>
+
+            <label for="zip">ZIP Code:</label>
+            <input type="number" name="zip" placeholder="ZIP Code" required>
+        </div>
+
+        <div class="input-group">
+            <label for="image">Upload ID Image:</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+        </div>
+
+        <div class="checkbox">
+            <input type="checkbox" required> I accept the Terms and Conditions
+        </div>
+
+        <input type="submit" class="signup-btn" value="Sign Up">
+
+        <div class="login-group">
+            <label for="login">Already have an Account?</label>
+            <button type="button" onclick="window.location.href='/login'" class="login-button">Log in</button>
+        </div>
+    </form>
+
+    <img src="../static/images/login-register.png" alt="Registration Image">
+</div>
+
+<div id="successModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Registration Successful!</p>
+    </div>
+</div>
+
+<script src="/static/js/registration.js"></script>
+
+
+</body>
+</html>

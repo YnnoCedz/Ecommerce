@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/add-product.css">
+    <title>Add Product</title>
+</head>
+<body>
+    <header>
+        <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+        <h1>Books, Bytes and Blockbusters</h1>
+    </header>
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/seller-homepage">Dashboard</a></li>
+            <li><a href="#">My Products</a>
+                <ul class="submenu">
+                    <li><a href="/view-products">View Products</a></li>
+                    <li><a href="/add-product">Add Product</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="/seller-shipping-center" class="orders-btn">Shipping Center</a>
+            </li>
+            <li>
+                <a href="/sales-report" class="orders-btn">Sales Report</a>
+            </li>
+            <li><a href="#" class="customer-service-btn">Customer Service</a>   
+                <ul class="submenu">
+                    <li><a href="/chat-management" class="chat">Chat Management</a></li>'
+                    <li><a href="/seller-service" class="chat">Chat With Admin</a></li>
+
+                </ul>
+            </li>
+            <li><a href="/seller-account" class="account-btn">Account Settings</a></li>
+        </ul>
+        <!-- Logout Button at Bottom -->
+        <div class="logout-btn">
+            <a href="/logout">Logout</a>
+        </div>
+    </aside>
+
+    <!-- Main product -->
+    <main class="add-product">
+        <div class="add-products">
+            <div class="container">
+                <h2>Add New Product</h2>
+                <form class="product-form" action="/add-product" method="POST" enctype="multipart/form-data">
+                    <div class="product-details">
+                        <div class="form-group">
+                            <label for="product-name">Product Name:</label>
+                            <input type="text" id="product-name" name="product_name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="product-description">Description:</label>
+                            <textarea id="product-description" name="product_description" rows="4" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="product-price">Price:(Php)</label>
+                            <input type="number" id="product-price" name="product_price" step="0.01" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="category">Category:</label>
+                            <select id="category" name="category" required>
+                                <option value="">Select Category</option>
+                                <option value="books">Books</option>
+                                <option value="games">Games</option>
+                                <option value="movies">Movies</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subcategory">Genres:</label>
+                            <div id="subcategory" class="checkbox-group"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="product-details-left">
+                        <div class="form-group">
+                            <label for="product-image">Main Product Image:</label>
+                            <label class="image-container" id="image-container">
+                                <img id="main-preview" src="{{ url_for('static', filename='uploads/default-image.jpg') }}" alt="Product Image">
+                                <input type="file" id="product-image" name="product_image" accept="image/*" class="file-input">
+                            </label>
+                        </div>
+                        
+                        <!-- Upload Additional Images (Initially Hidden) -->
+                        <div class="additional-images-container" style="display: none;">
+                            <label>Upload Additional Images:</label>
+                            <div id="additional-images-list"></div>
+                            <input type="file" id="additional-images" name="additional_images[]" accept="image/*" multiple>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="product-stock">Stock:</label>
+                            <input type="number" id="product-stock" name="product_stock" min="0" required>
+                        </div>
+                        <button type="submit" class="submit-btn">Add Product</button>
+
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="../static/js/add-product.js"></script>
+</body>
+</html>

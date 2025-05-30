@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <link rel="stylesheet" href="../static/view-products.css">
+</head>
+<body>
+    <header>
+        <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+        <h1>Books, Bytes and Blockbusters - Product List</h1>
+    </header>
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/seller-homepage">Dashboard</a></li>
+            <li><a href="#">My Products</a>
+                <ul class="submenu">
+                    <li><a href="/view-products">View Products</a></li>
+                    <li><a href="/add-product">Add Product</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="/seller-shipping-center" class="orders-btn">Shipping Center</a>
+            </li>
+            <li>
+                <a href="/sales-report" class="orders-btn">Sales Report</a>
+            </li>
+            <li><a href="#" class="customer-service-btn">Customer Service</a>   
+                <ul class="submenu">
+                    <li><a href="/chat-management" class="chat">Chat Management</a></li>'
+                    <li><a href="/seller-service" class="chat">Chat With Admin</a></li>
+
+                </ul>
+            </li>
+            <li><a href="/seller-account" class="account-btn">Account Settings</a></li>
+        </ul>
+        <!-- Logout Button at Bottom -->
+        <div class="logout-btn">
+            <a href="/logout">Logout</a>
+        </div>
+    </aside>
+    
+    <!-- Main content -->
+    <main class="main-content">
+        <div class="nav-container">
+            <div class="nav">
+                <a href="/view-products" style="color: crimson;">Active</a>
+                <a href="/view-products-archived">Archived</a>
+            </div>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" placeholder="Search..." aria-label="Search bar">
+            <button type="submit"><img src="../static/images/icons/search.png" alt="Search Icon"></button>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Product ID</th>
+                    <th>Product Image</th>
+                    <th>Product Name</th>
+                    <th>Stocks</th>
+                    <th>Archived Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if products %}
+                    {% for product in products %}
+                    <tr>
+                        <td>{{ product.product_id }}</td>
+                        <td>
+                            <img src="{{ url_for('static', filename='uploads/' + product['image_path']) }}" width="100" height="150">
+                        </td>
+                        <td><strong>{{ product.product_name }}</strong></td>
+                        <td class="{{ 'low-stock' if product.stocks <= 15 else '' }}">{{ product.stocks }}</td>
+                                                <td style="color: green;">{{ 'Archived' if product.archived else 'Active' }}</td>
+                        <td>
+                            <a href="{{ url_for('edit_product', product_id=product.product_id) }}" class="edit-btn">Edit</a>
+                            <button type="button" class="delete-btn" data-id="{{ product.product_id }}">Archive</button>
+                        </td>                   
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5">No products available.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </main>
+
+    <script src="/static/js/view-product.js"></script>
+</body>
+</html>

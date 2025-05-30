@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Shipping Center</title>
+    <link rel="stylesheet" href="../static/seller-shipping-center.css">
+</head>
+<body>
+
+    <header>
+        <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+        <h1>Books, Bytes and Blockbusters - Shipping Center</h1>
+    </header>
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/seller-homepage">Dashboard</a></li>
+            <li><a href="#">My Products</a>
+                <ul class="submenu">
+                    <li><a href="/view-products">View Products</a></li>
+                    <li><a href="/add-product">Add Product</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="/seller-shipping-center" class="orders-btn">Shipping Center</a>
+            </li>
+            <li>
+                <a href="/sales-report" class="orders-btn">Sales Report</a>
+            </li>
+            <li><a href="#" class="customer-service-btn">Customer Service</a>   
+                <ul class="submenu">
+                    <li><a href="/chat-management" class="chat">Chat Management</a></li>'
+                    <li><a href="/seller-service" class="chat">Chat With Admin</a></li>
+
+                </ul>
+            </li>
+            <li><a href="/seller-account" class="account-btn">Account Settings</a></li>
+        </ul>
+        <!-- Logout Button at Bottom -->
+        <div class="logout-btn">
+            <a href="/logout">Logout</a>
+        </div>
+    </aside>
+    </aside>
+    
+    <!-- Main content -->
+    <main class="main-content">
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Product</th>
+                    <th>Buyer</th>
+                    <th>Quantity</th>
+                    <th>Status</th>
+                    <th>Reason</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.order_id }}</td>
+                    <td>{{ order.product_name }}</td>
+                    <td>{{ order.first_name }} {{ order.last_name }} ({{ order.email }})</td>
+                    <td>{{ order.quantity }}</td>
+                    <td>{{ order.order_status }}</td>
+                    <td> <!-- reasons -->
+                        {% if order.reason %}
+                            {{ order.reason }}
+                            {% if order.additional_reason %}
+                                <br><em>({{ order.additional_reason }})</em>
+                            {% endif %}
+                        {% else %}
+                            <em>N/A</em>
+                        {% endif %}
+                    </td>
+                    <td> <!--Actions -->
+                        {% if order.order_status == 'pending' %}
+                            <!-- Approve Order -->
+                            <form method="POST" action="{{ url_for('update_order_status', order_id=order.order_id, status='approved') }}" onsubmit="event.preventDefault(); showConfirmation('Are you sure you want to approve this order?', this);">
+                                <button type="submit" class="btn-success">Approve Order</button>
+                            </form>
+                            
+                            <!-- Cancel Order -->
+                            <!-- <form method="POST" action="{{ url_for('update_order_status', order_id=order.order_id, status='cancelled') }}" onsubmit="event.preventDefault(); showConfirmation('Are you sure you want to cancel this order?', this);">
+                                <button type="submit" class="btn-danger">Cancel Order</button>
+                            </form> -->
+                            <form method="POST" action="{{ url_for('update_order_status', order_id=order.order_id, status='cancelled') }}" 
+                                onsubmit="event.preventDefault(); showReasonModal('Specify the reason for cancellation:', this);">
+                                <button type="submit" class="btn-danger">Cancel Order</button>
+                            </form>
+                            
+                        {% elif order.order_status == 'approved' %}
+                            <!-- Mark as On the Way -->
+                            <form method="POST" action="{{ url_for('update_order_status', order_id=order.order_id, status='on_the_way') }}" onsubmit="event.preventDefault(); showConfirmation('Are you sure you want to mark this order as on the way?', this);">
+                                <button type="submit" class="btn-primary">On the Way</button>
+                            </form>
+                        {% elif order.order_status == 'refund_requested' %}
+                            <!-- Approve Refund -->
+                            <form method="POST" action="{{ url_for('update_order_status', order_id=order.order_id, status='refund_approved') }}" onsubmit="event.preventDefault(); showConfirmation('Are you sure you want to approve the refund?', this);">
+                                <button type="submit" class="btn-success">Refund Approved</button>
+                            </form>
+
+                            <!-- Deny Refund -->
+                            <form method="POST" action="{{ url_for('update_order_status', order_id=order.order_id, status='refund_denied') }}" 
+                                onsubmit="event.preventDefault(); showReasonModal('Specify the reason for denying the refund:', this);">
+                                <button type="submit" class="btn-danger">Deny Refund</button>
+                            </form>
+                      
+                      
+                        {% elif order.order_status == 'cancel_requested' %}
+                            <!-- Approve Cancellation -->
+                            <form action="{{ url_for('approve_cancel', order_id=order.order_id) }}" method="POST" onsubmit="event.preventDefault(); showConfirmation('Are you sure you want to approve this cancellation?', this);">
+                                <button type="submit" class="btn-success">Approve Cancellation</button>
+                            </form>
+                    
+                            <!-- Deny Cancellation -->
+                            <form action="{{ url_for('deny_cancel', order_id=order.order_id) }}" method="POST" onsubmit="event.preventDefault(); showReasonModal('Specify the reason for denying the cancellation request:', this);">
+                                <button type="submit" class="btn-danger">Deny Cancellation</button>
+                            </form>
+
+                        {% elif order.order_status == 'delivered' %}
+                            <!-- Complete Button -->
+                            <form 
+                                action="{{ url_for('update_order_status', order_id=order.order_id, status='completed') }}" method="post" onsubmit="event.preventDefault(); showConfirmation('Are you sure you want to Complete Order?', this);">
+                                <button type="submit" class="btn-success">Complete</button>
+                            </form>
+
+                        {% else %}
+                            <span class="status-label">Order {{ order.order_status | capitalize }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <p id="modalMessage">Are you sure you want to perform this action?</p>
+            <div class="modal-buttons">
+                <button id="confirmButton" class="btn-success">Yes</button>
+                <button id="cancelButton" class="btn-danger">No</button>
+            </div>
+        </div>
+    </div>    
+
+    <!-- Reason Modal -->
+    <div id="reasonModal" class="modal">
+        <div class="modal-content">
+            <p id="reasonModalMessage">Please specify the reason:</p>
+
+            <!-- Predefined Reasons -->
+            <form id="reasonForm">
+                <div>
+                    <label><input type="radio" name="reason" value="Incorrect Order Details"> Incorrect Order Details</label>
+                </div>
+                <div>
+                    <label><input type="radio" name="reason" value="Out of Stock"> Out of Stock</label>
+                </div>
+                <div>
+                    <label><input type="radio" name="reason" value="Delay in Shipping"> Delay in Shipping</label>
+                </div>
+                <div>
+                    <label><input type="radio" name="reason" value="Delivery Area Out of Range"> Delivery Area Out of Range</label>
+                </div>
+                <div>
+                    <label><input type="radio" name="reason" value="Non-refundable Product"> Non-refundable Product</label>
+                </div>
+                <div>
+                    <label><input type="radio" name="reason" value="Payment Issue"> Payment Issue</label>
+                </div>
+                <div>
+                    <label><input type="radio" name="reason" value="Expired items"> Expired items</label>
+                </div>
+                <div>
+                    <label><input type="radio" name="reason" value="Fraud"> Fraud</label>
+                </div>
+                <div>
+                    <label><input type="radio" name="reason" value="Other"> Other</label>
+                </div>
+                <!-- Additional Reason Text Field -->
+                <textarea id="additionalReason" name="additionalReason" placeholder="Add additional reason (if any)..." rows="5" style="width: 100%; display: none;"></textarea>
+            </form>
+
+            <!-- Modal Buttons -->
+            <div class="modal-buttons">
+                <button id="submitReasonButton" class="btn-success">Submit</button>
+                <button id="cancelReasonButton" class="btn-danger">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+
+<script>
+  // Global variable to store the current form being processed
+let currentForm = null;
+
+/**
+ * Show the confirmation modal with a message.
+ * @param {string} message - The confirmation message to display.
+ * @param {HTMLFormElement} form - The form to be submitted upon confirmation.
+ */
+function showConfirmation(message, form) {
+    currentForm = form; // Store the reference to the form
+    document.getElementById("modalMessage").textContent = message; // Set the modal message
+    document.getElementById("confirmationModal").style.display = "block"; // Display the modal
+}
+
+/**
+ * Show the reason modal for specific actions.
+ * @param {string} message - The message to display in the modal.
+ * @param {HTMLFormElement} form - The form to be submitted upon reason selection.
+ */
+function showReasonModal(message, form) {
+    console.log("Reason modal triggered for form:", form); // Debugging output
+    currentForm = form; // Store the reference to the form
+    document.getElementById("reasonModalMessage").textContent = message; // Set modal message
+    document.getElementById("reasonModal").style.display = "block"; // Display the modal
+}
+
+/**
+ * Close all modals (confirmation and reason modals).
+ */
+function closeModal() {
+    document.getElementById("confirmationModal").style.display = "none"; // Hide confirmation modal
+    document.getElementById("reasonModal").style.display = "none"; // Hide reason modal
+}
+
+/**
+ * Handle the "Yes" button click in the confirmation modal.
+ * Submits the current form and closes the modal.
+ */
+document.getElementById("confirmButton").addEventListener("click", function () {
+    if (currentForm) {
+        console.log("Submitting form via confirmation modal:", currentForm); // Debugging output
+        currentForm.submit(); // Submit the stored form
+    }
+    closeModal(); // Close the modal after submission
+});
+
+/**
+ * Handle the "No" button click in the confirmation modal.
+ * Closes the modal without taking further action.
+ */
+document.getElementById("cancelButton").addEventListener("click", function () {
+    closeModal(); // Close the modal
+});
+
+/**
+ * Handle the "Submit" button click in the reason modal.
+ * Collects the selected reason and additional reason (if any), attaches them as hidden inputs, and submits the form.
+ */
+document.getElementById("submitReasonButton").addEventListener("click", function () {
+    const selectedReason = document.querySelector('input[name="reason"]:checked'); // Get selected reason
+    const additionalReason = document.getElementById("additionalReason").value.trim(); // Get additional reason
+
+    if (!selectedReason) {
+        alert("Please select a reason."); // Alert if no reason is selected
+        return;
+    }
+
+    console.log("Selected reason:", selectedReason.value); // Debugging output
+    console.log("Additional reason:", additionalReason); // Debugging output
+
+    // Create hidden inputs for reasons and attach them to the form
+    const hiddenReasonInput = document.createElement("input");
+    hiddenReasonInput.type = "hidden";
+    hiddenReasonInput.name = "reason";
+    hiddenReasonInput.value = selectedReason.value;
+
+    const hiddenAdditionalInput = document.createElement("input");
+    hiddenAdditionalInput.type = "hidden";
+    hiddenAdditionalInput.name = "additional_reason";
+    hiddenAdditionalInput.value = additionalReason;
+
+    currentForm.appendChild(hiddenReasonInput); // Append selected reason to the form
+    currentForm.appendChild(hiddenAdditionalInput); // Append additional reason to the form
+
+    console.log("Submitting form via reason modal:", currentForm); // Debugging output
+    currentForm.submit(); // Submit the form
+    closeModal(); // Close the modal
+});
+
+/**
+ * Handle the "Cancel" button click in the reason modal.
+ * Closes the modal without taking further action.
+ */
+document.getElementById("cancelReasonButton").addEventListener("click", function () {
+    closeModal(); // Close the modal
+});
+
+/**
+ * Show or hide the additional reason textarea based on the "Other" radio button selection.
+ */
+document.querySelectorAll('input[name="reason"]').forEach((radio) => {
+    radio.addEventListener("change", function () {
+        const additionalReasonField = document.getElementById("additionalReason");
+        if (this.value === "Other") {
+            additionalReasonField.style.display = "block"; // Show the additional reason field
+        } else {
+            additionalReasonField.style.display = "none"; // Hide the additional reason field
+        }
+    });
+});
+
+</script>
+</html>

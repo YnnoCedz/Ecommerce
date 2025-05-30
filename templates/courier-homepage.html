@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/seller-page.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <title>Courier Dashboard</title>
+</head>
+<body>
+
+    <header>
+        <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+        <h1>Books, Bytes and Blockbusters - Courier Dashboard</h1>
+    </header>
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/courier-homepage">Dashboard</a></li>
+            <li><a href="/courier-orders">Orders</a></li>
+            <li><a href="/courier-pickups">Return Requests</a></li>
+            <li><a href="/courier-tracking">Delivery Tracking</a></li>
+            <li><a href="/courier-support">Customer Support</a></li>
+            <li><a href="/courier-account" class="account-btn">Account Settings</a></li>
+        </ul>
+        <!-- Logout Button at Bottom -->
+        <div class="logout-btn">
+            <a href="/logout">Logout</a>
+        </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content">
+        <h2>Welcome {{ courier_name }} to your Dashboard</h2>
+        <div class="dashboard-cards">
+            <div class="card">
+                <h3>Total Orders</h3>
+                <p>{{ total_orders or 0 }}</p>
+            </div>
+            <div class="card">
+                <h3>Total Commission</h3>
+                <p>Php {{ total_commission or 0 }}</p>
+            </div>
+            <div class="card">
+                <h3>On Delivery</h3>
+                <p>{{ on_delivery or 0 }}</p>
+            </div>
+            <div class="card">
+                <h3>Return/Pickups</h3>
+                <p>{{ returns_refunds or 0 }}</p>
+            </div>
+        </div>
+    
+        <div class="quick-view">
+            <!-- Top Selling Products Table (optional; remove if not applicable) -->
+            <div class="top-locations">
+                
+                <div class="top-locations">
+                    <div class="top-delivery-header">
+                        <h2>📍 Most Delivered Locations</h2>
+                    </div>
+                
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Province</th>
+                                <th>City</th>
+                                <th>Barangay</th>
+                                <th>Total Deliveries</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for location in most_delivered_locations %}
+                            <tr>
+                                <td style="text-align: center;">{{ loop.index }}</td>
+                                <td>{{ location.province }}</td>
+                                <td>{{ location.city }}</td>
+                                <td>{{ location.barangay }}</td>
+                                <td><strong>{{ location.total_deliveries }}</strong></td>
+                            </tr>
+                            {% endfor %}
+                            {% if most_delivered_locations|length == 0 %}
+                            <tr>
+                                <td colspan="5" style="text-align: center;">No delivery data available.</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                
+            
+                
+            <div class="notif-bars">
+                <div class="notification-bar">
+                    <h3>Notifications</h3>
+                    <ul>
+                        <!-- 🟠 ORANGE: Orders Not Delivered Today -->
+                        <li class="notification warning" style="color: orange;">
+                            <span class="material-symbols-outlined">warning</span>
+                            To deliver: <strong>{{ not_delivered_today }}</strong>  
+                        </li>
+                
+                        <!-- 🟢 GREEN: Total Commission Earned Today -->
+                        <li class="notification commission" style="color: green;">
+                            <span class="material-symbols-outlined">monetization_on</span>
+                            Daily Commission: ₱ <strong>{{ daily_commission }}</strong>
+                        </li>
+                
+                        <!-- 🔴 RED: Orders Not Delivered in 15 Days -->
+                        {% if overdue_orders >= 10 %}
+                        <li class="notification overdue" style="color: red;">
+                            <span class="material-symbols-outlined">error</span>
+                            Warning: <strong>{{ overdue_orders }}</strong> orders 
+                        </li>
+                        {% endif %}
+                
+                        <!-- 🔴 RED: Report to Admin If Orders Are 20+ Days Late -->
+                        {% if report_needed > 0 %}
+                        <li class="notification report" style="color: red; font-weight: bold;">
+                            <span class="material-symbols-outlined">report_problem</span>
+                            REPORT TO ADMIN <strong>{{ report_needed }}</strong> orders 
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                
+            </div>
+
+        </div>
+    </main>
+    
+
+</body>
+</html>

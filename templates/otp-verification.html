@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <link rel="stylesheet" href="../static/otp-style.css">
+</head>
+<body>
+    
+    <header>
+        <div class="header-container">
+            <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+            <h1>Books, Bytes and  Blockbusters</h1>
+        </div>
+    </header>
+
+
+    <form action="{{ url_for('otp_verification', email=email) }}" method="POST">
+        <div class="otp-input-container">
+            <input type="text" name="otp" maxlength="1" class="otp-input" oninput="moveToNext(this, 'otp-2')" autofocus>
+            <input type="text" id="otp-2" maxlength="1" class="otp-input" oninput="moveToNext(this, 'otp-3')">
+            <input type="text" id="otp-3" maxlength="1" class="otp-input" oninput="moveToNext(this, 'otp-4')">
+            <input type="text" id="otp-4" maxlength="1" class="otp-input">
+        </div>
+        <button class="verify-btn" type="submit">Verify</button>
+        <p class="resend-link">Didn’t receive the OTP? <a href="#">Resend OTP</a></p>
+    </form>
+
+
+    <!-- <div class="otp-container">
+        <h2>Verify Your Number</h2>
+        <p>We have sent you an OTP on your mobile number</p>
+        
+        <div class="otp-input-container">
+            <input type="text" id="otp-1" maxlength="1" class="otp-input" oninput="moveToNext(this, 'otp-2')" autofocus>
+            <input type="text" id="otp-2" maxlength="1" class="otp-input" oninput="moveToNext(this, 'otp-3')">
+            <input type="text" id="otp-3" maxlength="1" class="otp-input" oninput="moveToNext(this, 'otp-4')">
+            <input type="text" id="otp-4" maxlength="1" class="otp-input">
+        </div>
+
+        <button class="verify-btn">Verify</button>
+        <p class="resend-link">Didn’t receive the OTP? <a href="#">Resend OTP</a></p>
+    </div> -->
+
+    <script>
+        function moveToNext(current, nextFieldID) {
+            if (current.value.length === 1) {
+                document.getElementById(nextFieldID).focus();
+            }
+        }
+    </script>
+</body>
+</html>

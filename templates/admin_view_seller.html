@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/user_management.css">
+    <title>Seller Profile</title>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+            <h1>Books, Bytes and Blockbusters</h1>
+        </div>
+    </header>
+
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/admin">Dashboard</a></li>
+            <li><a href="">Accounts Management</a>
+                <ul class="submenu">
+                    <li><a href="/admin_users">Buyer</a></li>
+                    <li><a href="/admin_sellers">Seller</a></li>
+                    <li><a href="/view_user_applicants">Applicants</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="marketing-btn">Marketing</a>
+                <ul class="submenu">
+                    <li><a href="/admin/upload-promotion">Promotions</a></li>
+                    <li><a href="/admin/vouchers">Vouchers</a></li>
+                </ul>
+            </li>
+            <li><a href="#" class="marketing-btn">Customer Service</a>
+                <ul class="submenu">
+                    <li><a href="/admin_user_chat_management">Buyers</a></li>
+                    <li><a href="/admin_seller_chat_management">Sellers</a></li>
+                </ul>
+            </li>
+            <li><a href="/logout" class="account-btn">Logout</a></li>
+        </ul>
+    </aside>
+
+    <main>
+        <div class="profile-container">
+            <div class="profile-header">
+                <img src="{{ url_for('static', filename='uploads/' + (seller.seller_image)) }}" alt="Profile Picture" class="profile-pic">
+                <p><strong>{{ seller.first_name }} {{ seller.last_name }}</strong></p>
+            </div>
+            <div class="profile-details">
+                <p><strong>Email: </strong> {{ seller.email }}</p>
+                <p><strong>Phone: </strong> {{ seller.contact_number }}</p>
+                <p><strong>Address: </strong>{{ seller.street }}, {{ seller.barangay }},
+                    {{ seller.city }}, {{ seller.province }} {{ seller.zip_code }}</p>
+                <p><strong>Role: </strong> {{ seller.role}}</p>
+            </div>
+            <div class="store-credentials">
+                <h2>{{ seller.store_name }}</h2>
+                <p><strong>Description: </strong>{{ seller.store_description }}</p>
+
+                <h2>Store Credentials</h2>
+                <p><strong>Seller ID:</strong></p>
+                <img src="{{ url_for('static', filename='uploads/' + seller.seller_id_path) }}" alt="Seller Id">
+                
+                <p><strong>Shop Certificate:</strong></p>
+                <img src="{{ url_for('static', filename='uploads/' + seller.seller_certificate_path) }}" alt="Seller Certificate">
+
+            </div>
+        </div>
+    </main>
+</body>
+</html>

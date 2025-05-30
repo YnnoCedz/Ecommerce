@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Courier Account Settings</title>
+  <!-- <link rel="stylesheet" href="../static/seller-page.css"> -->
+  <link rel="stylesheet" href="../static/courier-page.css">
+
+</head>
+<body>
+
+  <header>
+    <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+    <h1>Books, Bytes and Blockbusters - Account Settings</h1>
+  </header>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+    <ul>
+        <li><a href="/courier-homepage">Dashboard</a></li>
+        <li><a href="/courier-orders">Orders</a></li>
+        <li><a href="/courier-pickups">Return Requests</a></li>
+        <li><a href="/courier-tracking">Delivery Tracking</a></li>
+        <li><a href="/courier-support">Customer Support</a></li>
+        <li><a href="/courier-account" class="account-btn">Account Settings</a></li>
+    </ul>
+    <!-- Logout Button at Bottom -->
+    <div class="logout-btn">
+        <a href="/logout">Logout</a>
+    </div>
+</aside>
+
+  <main class="main-content">
+    <h2>Update Your Account Information</h2>
+
+    <section class="account-settings">
+      <!-- Update Email -->
+      <div class="settings-section">
+        <h3>Change Email</h3>
+        <form onsubmit="requestOtp(event, 'email')" class="settings-form">
+          <div class="form-group">
+            <label for="new-email">New Email:</label>
+            <input type="email" id="new-email" name="email" placeholder="Enter new email" required>
+          </div>
+          <button type="submit" class="submit-btn">Update Email</button>
+        </form>
+      </div>
+
+      <!-- Update Password -->
+      <div class="settings-section">
+        <h3>Change Password</h3>
+        <form onsubmit="requestOtp(event, 'password')" class="settings-form">
+          <div class="form-group">
+            <label for="new-password">New Password:</label>
+            <input type="password" id="new-password" name="password" placeholder="Enter new password" required>
+          </div>
+          <button type="submit" class="submit-btn">Update Password</button>
+        </form>
+      </div>
+
+      <!-- Update Phone Number -->
+      <div class="settings-section">
+        <h3>Change Phone Number</h3>
+        <form onsubmit="requestOtp(event, 'phone')" class="settings-form">
+          <div class="form-group">
+            <label for="new-phone">New Phone Number:</label>
+            <input type="text" id="new-phone" name="phone" placeholder="Enter new phone number" required>
+          </div>
+          <button type="submit" class="submit-btn">Update Phone Number</button>
+        </form>
+      </div>
+
+      <!-- Update Address -->
+      <div class="settings-section">
+        <h3>Update Address</h3>
+        <form action="{{ url_for('courier_update_address') }}" method="POST" class="settings-form">
+          <label for="province">Province</label>
+          <select id="province" name="province" required>
+            <option value="" disabled selected>Select Province</option>
+          </select>
+          <label for="city">City</label>
+          <select id="city" name="city" required>
+            <option value="" disabled selected>Select City</option>
+          </select>
+          <label for="barangay">Barangay</label>
+          <select id="barangay" name="barangay" required>
+            <option value="" disabled selected>Select Barangay</option>
+          </select>
+          <label for="street">Street</label>
+          <input type="text" name="street" placeholder="Street" required>
+          <label for="zip">ZIP Code:</label>
+          <input type="number" name="zip" min="1" max="9999" placeholder="ZIP Code" required>
+          <button type="submit" class="submit-btn">Update Address</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- OTP Verification Modal -->
+  <div id="otpModal" class="modal">
+    <div class="modal-content">
+      <h2>Enter OTP</h2>
+      <p>A verification code has been sent to your email. Enter the OTP below to confirm.</p>
+      <input type="text" id="otp-input" placeholder="Enter OTP">
+      <button onclick="verifyOtp()">Verify</button>
+      <button onclick="closeOtpModal()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Success Message Modal -->
+  <div id="successModal" class="modal">
+    <div class="modal-content">
+      <h2>Update Successful!</h2>
+      <p>Your information has been updated successfully.</p>
+      <button onclick="closeSuccessModal()" class="confirm-btn">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let updateType, newValue;
+
+    // Request OTP via email before making any sensitive changes
+    function requestOtp(event, type) {
+      event.preventDefault();
+      updateType = type;
+      newValue = document.querySelector(`#new-${type}`).value;
+
+      fetch('/send_otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `email=${newValue}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          document.getElementById("otpModal").style.display = "block";
+        } else {
+          alert("Error: " + data.message);
+        }
+      });
+    }
+
+    // Verify OTP and update user information
+    function verifyOtp() {
+      let otp = document.getElementById("otp-input").value;
+
+      fetch('/verify_otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `email=${newValue}&otp=${otp}&update_type=${updateType}&new_value=${newValue}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          closeOtpModal();
+          showSuccessModal();
+        } else {
+          alert("Error: " + data.message);
+        }
+      });
+    }
+
+    function closeOtpModal() {
+      document.getElementById("otpModal").style.display = "none";
+    }
+
+    function showSuccessModal() {
+      document.getElementById("successModal").style.display = "block";
+    }
+
+    function closeSuccessModal() {
+      document.getElementById("successModal").style.display = "none";
+      location.reload();
+    }
+  </script>
+</body>
+</html>
+    

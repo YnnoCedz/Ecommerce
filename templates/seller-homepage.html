@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/seller-page.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <title>Seller Dashboard</title>
+</head>
+<body>
+
+    <header>
+        <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+        <h1>Books, Bytes and Blockbusters - Product List</h1>
+    </header>
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/seller-homepage">Dashboard</a></li>
+            <li><a href="#">My Products</a>
+                <ul class="submenu">
+                    <li><a href="/view-products">View Products</a></li>
+                    <li><a href="/add-product">Add Product</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="/seller-shipping-center" class="orders-btn">Shipping Center</a>
+            </li>
+            <li>
+                <a href="/sales-report" class="orders-btn">Sales Report</a>
+            </li>
+            <li><a href="#" class="customer-service-btn">Customer Service</a>   
+                <ul class="submenu">
+                    <li><a href="/chat-management" class="chat">Chat Management</a></li>'
+                    <li><a href="/seller-service" class="chat">Chat With Admin</a></li>
+
+                </ul>
+            </li>
+            <li><a href="/seller-account" class="account-btn">Account Settings</a></li>
+        </ul>
+        <!-- Logout Button at Bottom -->
+        <div class="logout-btn">
+            <a href="/logout">Logout</a>
+        </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content">
+        <h2>Welcome {{ store_name }} to the Seller Dashboard</h2>
+        <div class="dashboard-cards">
+            <div class="card">
+                <h3>Total Sales</h3>
+                <p>Php {{ total_sales or 0 }}</p>
+            </div>
+            <div class="card">
+                <h3>New Orders</h3>
+                <p>{{ new_orders or 0 }}</p>
+            </div>
+            <div class="card">
+                <h3>Products Listed</h3>
+                <p>{{ product_count or 0 }}</p>
+            </div>
+            <div class="card">
+                <h3>Returns/Refunds</h3>
+                <p>{{ returns_refunds or 0 }}</p>
+            </div>
+            <div class="card">
+                <h3>On Delivery</h3>
+                <p>{{ on_delivery or 0 }}</p>
+            </div>
+        </div>
+    
+        <div class="quick-view">
+            <!-- Top Selling Products Table -->
+            <div class="top-products">
+                <div class="top-selling-header">
+                    <h2>Top Selling Products</h2>
+                    <a href="/view-products" class="view-products-link">Go to Product List</a>
+                </div>
+            
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Product No.</th>
+                            <th>Product Name</th>
+                            <th class="stocks">Stocks</th>
+                            <th>Total Sales</th>
+                            <th>Ave. Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in top_products %}
+                        <tr>
+                            <td style="text-align: center;">{{ loop.index }}</td>
+                            <td>
+                                <div class="product">
+                                    <img src="{{ url_for('static', filename='uploads/' + product.image_path) }}" alt="Product Image">
+                                    <span>{{ product.product_name }}</span>
+                                </div>
+                            </td>
+                            <td class="stocks {{ 'out-of-stock' if product.stocks == 0 else 'low-stock' if product.stocks <= 20 else 'in-stock' }}">
+                                {{ 'Out of Stock' if product.stocks == 0 else 'Low Stock' if product.stocks <= 20 else 'In Stock' }}
+                            </td>
+                            <td>Php {{ product.total_sales }}</td>
+                            <td>
+                                {{ product.average_rating | default(0) | round(1) }}
+                                <span class="material-symbols-outlined" style="color:gold">star</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table> 
+            </div>
+                
+            <div class="notif-bars">
+                <div class="notification-bar">
+                    <h3>Notifications</h3>
+                    <ul>
+                        <li class="notification sales-update">
+                            <span class="material-symbols-outlined">sell</span>
+                            Sales Update: <strong>Php {{ daily_sales }} today!</strong>
+                        </li>
+                        <li class="notification low-stock">
+                            <span class="material-symbols-outlined">error</span>
+                            Low Stock Warning: <strong>{{ low_stock_count }} products</strong>
+                        </li>
+                        <li class="notification out-of-stock">
+                            <span class="material-symbols-outlined">warning</span>
+                            Out of Stock: <strong>{{ out_of_stock_count }} products</strong>
+                        </li>
+                    </ul>
+                </div>
+
+
+                <!-- Chat Notification Bar -->
+                <div class="chat-notification-bar">
+                    <h3>Chat Notifications</h3>
+                    <div class="chat-notification-table">
+                        <ul>
+                            {% for notification in unread_chat_notifications %}
+                                <div class="chat-notification-row">
+                                    <span class="material-symbols-outlined" style="color: dimgrey;">person</span>
+                                    <span class="chat-email">{{ notification.sender_email }}</span>
+                                    <div class="chat-notification-row-below">
+                                        <span class="chat-message"><strong>Sent a message</strong></span>
+                                        <span class="chat-timestamp">{{ notification.latest_message_time.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {% if not unread_chat_notifications %}
+                                <li class="chat-notification-row no-messages">
+                                    <span class="chat-email">No new messages</span>
+                                    <span class="chat-message"></span>
+                                    <span class="chat-timestamp"></span>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+    </main>
+    
+
+</body>
+</html>

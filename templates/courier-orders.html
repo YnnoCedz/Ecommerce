@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders</title>
+  <link rel="stylesheet" href="../static/view-products.css">
+</head>
+<body>
+  <header>
+    <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+    <h1>Books, Bytes and Blockbusters - Orders</h1>
+  </header>
+  
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <ul>
+      <li><a href="/courier-homepage">Dashboard</a></li>
+      <li><a href="/courier-orders">Orders</a></li>
+      <li><a href="/courier-tracking">Delivery Tracking</a></li>
+      <li><a href="/courier-support">Customer Support</a></li>
+      <li><a href="/courier-account" class="account-btn">Account Settings</a></li>
+    </ul>
+    <!-- Logout Button at Bottom -->
+    <div class="logout-btn">
+      <a href="/logout">Logout</a>
+    </div>
+  </aside>
+  
+  <!-- Main content -->
+  <main class="main-content">
+
+    <div class="nav-container">
+      <div class="nav">
+        <a href="/courier-orders" style="color: crimson;">Approved Orders</a>
+        <a href="/courier_in_transit">In Transit</a>
+        <a href="/courier_returns">Return Requests</a>
+      </div>
+    </div>
+
+    <div class="search-bar">
+      <input type="text" placeholder="Search by receiver name..." aria-label="Search bar">
+      <button type="submit"><img src="../static/images/icons/search.png" alt="Search Icon"></button>
+    </div>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Delivery No.</th>
+          <th>Receiver</th>
+          <th>Phone Number</th>
+          <th>No. of Items</th>
+          <th>Delivery Address</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if orders %}
+          {% for order in orders %}
+          <tr>
+            <td><!-- number 1 to ~ --></td>
+            <td><strong>{{ order.first_name }} {{ order.last_name }}</strong></td>
+            <td>{{ order.phone_number }}</td>
+            <td>{{ order.quantity }}</td>
+            <td>{{ order.delivery_address }}</td>
+            <td>
+              <button class="edit-btn" data-order-id="{{ order.order_id }}">Pack Order</button>
+            </td>                   
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="6">No approved orders for delivery.</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </main>
+  
+  <script>
+    // Search functionality to filter rows by receiver's name (column 2)
+    document.addEventListener("DOMContentLoaded", function () {
+      const searchInput = document.querySelector(".search-bar input");
+      const tableRows = document.querySelectorAll("table tbody tr");
+
+      searchInput.addEventListener("input", function () {
+        const query = searchInput.value.toLowerCase();
+        tableRows.forEach(row => {
+          const receiverCell = row.querySelector("td:nth-child(2)");
+          const receiverText = receiverCell ? receiverCell.textContent.toLowerCase() : "";
+          row.style.display = receiverText.includes(query) ? "" : "none";
+        });
+      });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const packOrderButtons = document.querySelectorAll(".edit-btn");
+
+    packOrderButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const orderId = this.getAttribute("data-order-id");
+
+            fetch("/assign_courier", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: `order_id=${orderId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                if (data.status === "success") {
+                    location.reload(); // Refresh page after successful assignment
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred while assigning the order.");
+            });
+        });
+    });
+});
+
+  </script>
+</body>
+</html>

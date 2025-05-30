@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/admin-promotion.css">
+    <title>Promotion Management</title>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+            <h1>Books, Bytes and Blockbusters</h1>
+        </div>
+    </header>
+
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/admin">Dashboard</a></li>
+            <li><a href="#">Accounts Management</a>
+                <ul class="submenu">
+                    <li><a href="/admin_users">Buyer</a></li>
+                    <li><a href="/admin_sellers">Seller</a></li>
+                    <li><a href="/view_user_applicants">Applicants</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="marketing-btn">Marketing</a>
+                <ul class="submenu">
+                    <li><a href="/admin/upload-promotion">Promotions</a></li>
+                    <li><a href="/admin/vouchers">Vouchers</a></li>
+                </ul>
+            </li>
+            <li><a href="#" class="marketing-btn">Customer Service</a>
+                <ul class="submenu">
+                    <li><a href="/admin_user_chat_management">Buyers</a></li>
+                    <li><a href="/admin_seller_chat_management">Sellers</a></li>
+                </ul>
+            </li>
+            <li><a href="/logout" class="account-btn">Logout</a></li>
+        </ul>
+    </aside>
+
+    <main>
+        <h2>Manage Homepage Flash Deals</h2>
+        <!-- Current Promotion Section -->
+        <section class="current-promotion">
+            <h3>Current Active Promotion:</h3>
+            {% if current_promotion %}
+                <div class="promotion-card">
+                    <img src="{{ url_for('static', filename='uploads/' + current_promotion.image_url) }}" alt="Current Promotion Image">
+                </div>
+            {% else %}
+                <p>No active promotion. Upload a new promotion below.</p>
+            {% endif %}
+        </section>
+
+        <section class="current-promotion">
+            <h3> Preview Promotion:</h3>
+            <div id="new-promotion-preview" class="promotion-card" style="display: none;">
+                <img id="preview-image" src="" alt="New Promotion Preview">
+            </div>
+        </section>
+
+        <!-- Upload Form -->
+        <section class="upload-section">
+
+            
+            <form action="/admin/upload-promotion" method="POST" enctype="multipart/form-data" class="upload-form">
+                <label for="promotion-upload">Upload New Promotion:</label>
+                <input type="file" name="file" id="promotion-upload" accept="image/*" required>
+                
+                <button type="submit" class="upload-btn">Upload</button>
+            </form>
+        </section>
+        
+
+        <!-- Previous Promotions -->
+        <h3>Previous Promotions</h3>
+        <div class="promotions-container">
+            {% if promotions %}
+                {% for promotion in promotions %}
+                <div class="promotion-card">
+                    <img src="{{ url_for('static', filename='uploads/' + promotion.image_url) }}" alt="Promotion Image">
+                    <form action="/admin/promotion-action" method="POST" class="promotion-action-form">
+                        <input type="hidden" name="promotion_id" value="{{ promotion.id }}">
+                        <input type="hidden" name="action" value="">
+                        <button type="button" class="reupload-btn" data-action="reupload">Set as Current Promotion</button>
+                        <button type="button" class="delete-btn" data-action="delete">Delete</button>
+                    </form>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No previous promotions available.</p>
+            {% endif %}
+        </div>
+    
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2 id="modal-title">Confirm Action</h2>
+            <p id="modal-message">Are you sure you want to perform this action?</p>
+            <div class="modal-buttons">
+                <button id="confirm-btn" class="confirm-btn">Yes</button>
+                <button id="cancel-btn" class="cancel-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+            document.addEventListener('DOMContentLoaded', () => {
+            const fileInput = document.getElementById('promotion-upload');
+            const previewContainer = document.getElementById('new-promotion-preview');
+            const previewImage = document.getElementById('preview-image');
+
+            fileInput.addEventListener('change', () => {
+                const file = fileInput.files[0];
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        previewImage.src = e.target.result;
+                        previewContainer.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    previewContainer.style.display = 'none';
+                }
+            });
+        });
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const confirmationModal = document.getElementById('confirmation-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMessage = document.getElementById('modal-message');
+            const confirmBtn = document.getElementById('confirm-btn');
+            const cancelBtn = document.getElementById('cancel-btn');
+            let currentForm = null;
+
+            // Event listener for action buttons
+            document.querySelectorAll('.reupload-btn, .delete-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const action = button.dataset.action;
+                    const form = button.closest('.promotion-action-form');
+
+                    if (action === 'reupload') {
+                        modalTitle.textContent = 'Confirm Reupload';
+                        modalMessage.textContent = 'Are you sure you want to set this as the current promotion?';
+                        form.querySelector('[name="action"]').value = 'reupload';
+                    } else if (action === 'delete') {
+                        modalTitle.textContent = 'Confirm Delete';
+                        modalMessage.textContent = 'Are you sure you want to delete this promotion?';
+                        form.querySelector('[name="action"]').value = 'delete';
+                    }
+
+                    currentForm = form;
+                    confirmationModal.style.display = 'flex';
+                });
+            });
+
+            // Confirm button action
+            confirmBtn.addEventListener('click', () => {
+                if (currentForm) {
+                    currentForm.submit();
+                }
+                confirmationModal.style.display = 'none';
+            });
+
+            // Cancel button hides the modal
+            cancelBtn.addEventListener('click', () => {
+                confirmationModal.style.display = 'none';
+                currentForm = null;
+            });
+        });
+    </script>
+</body>
+</html>

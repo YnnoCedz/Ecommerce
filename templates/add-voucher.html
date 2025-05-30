@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/admin.css">
+    <title>Admin - Manage Vouchers</title>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+            <h1>Books, Bytes and Blockbusters</h1>
+        </div>
+    </header>
+
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/admin">Dashboard</a></li>
+            <li><a href="">Accounts Management</a>
+                <ul class="submenu">
+                    <li><a href="/admin_users">Buyer</a></li>
+                    <li><a href="/admin_sellers">Seller</a></li>
+                    <li><a href="/view_user_applicants">Applicants</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="marketing-btn">Marketing</a>
+                <ul class="submenu">
+                    <li><a href="/admin/upload-promotion">Promotions</a></li>
+                    <li><a href="/admin/vouchers">Vouchers</a></li>
+                </ul>
+            </li>
+            <li><a href="#" class="marketing-btn">Customer Service</a>
+                <ul class="submenu">
+                    <li><a href="/admin_user_chat_management">Buyers</a></li>
+                    <li><a href="/admin_seller_chat_management">Sellers</a></li>
+                </ul>
+            </li>
+            <li><a href="/logout" class="account-btn">Logout</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="voucher-section">
+            <h1>Add Voucher</h1>
+            <form action="/add-voucher" method="POST" enctype="multipart/form-data">
+                <label for="voucher_code">Voucher Code:</label>
+                <input type="text" id="voucher_code" name="voucher_code" required><br><br>
+
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required></textarea><br><br>
+
+                <label for="discount">Discount (%):</label>
+                <input type="number" id="discount" name="discount" step="0.01" required><br><br>
+
+                <label for="category">Category:</label>
+                <select id="category" name="category" required>
+                    <option value="books">Books</option>
+                    <option value="games">Games</option>
+                    <option value="movies">Movies</option>
+                </select><br><br>
+
+                <label for="voucher_image">Voucher Image:</label>
+                <input type="file" id="voucher_image" name="voucher_image" accept="image/*"><br><br>
+
+                <button type="submit" class="addvoucher-btn">Add Voucher</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Voucher has been successfully created!</h2>
+            <a href="/admin/vouchers" class="modal-btn">Go to Vouchers</a>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>{{ error_message }}</h3>
+        </div>
+    </div>
+
+    <script>
+        // Display the modal based on server response
+        document.addEventListener("DOMContentLoaded", function () {
+            {% if show_modal %}
+            const modal = document.getElementById('successModal');
+            modal.style.display = 'block';
+            {% elif error_message %}
+            const modal = document.getElementById('errorModal');
+            modal.style.display = 'block';
+            {% endif %}
+        });
+
+        function closeModal() {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => modal.style.display = 'none');
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function (event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        };
+    </script>
+    
+</body>
+</html>

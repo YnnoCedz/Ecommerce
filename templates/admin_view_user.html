@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/user_management.css">
+    <title>User Profile</title>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <img src="{{ url_for('static', filename='images/MIDLOGO.png') }}" alt="Company Logo" class="logo">
+            <h1>Books, Bytes and Blockbusters</h1>
+        </div>
+    </header>
+
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/admin">Dashboard</a></li>
+            <li><a href="">Accounts Management</a>
+                <ul class="submenu">
+                    <li><a href="/admin_users">Buyer</a></li>
+                    <li><a href="/admin_sellers">Seller</a></li>
+                    <li><a href="/view_user_applicants">Applicants</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="marketing-btn">Marketing</a>
+                <ul class="submenu">
+                    <li><a href="/admin/upload-promotion">Promotions</a></li>
+                    <li><a href="/admin/vouchers">Vouchers</a></li>
+                </ul>
+            </li>
+            <li><a href="#" class="marketing-btn">Customer Service</a>
+                <ul class="submenu">
+                    <li><a href="/admin_user_chat_management">Buyers</a></li>
+                    <li><a href="/admin_seller_chat_management">Sellers</a></li>
+                </ul>
+            </li>
+            <li><a href="/logout" class="account-btn">Logout</a></li>
+        </ul>
+    </aside>
+
+    <main>
+        {% if user %}
+        <div class="profile-container">
+            <div class="profile-header">
+                <img src="{{ url_for('static', filename='uploads/' + (user.profile_image_url if user.profile_image_url else 'default-user.png')) }}" alt="Profile Picture" class="profile-pic">
+                <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+            </div>
+            <div class="profile-details">
+                <p><strong>Email: </strong> {{ user.email }}</p>
+                <p><strong>Phone: </strong> {{ user.phone_number }}</p>
+                <p><strong>Address: </strong>{{ user.street }}, {{ user.barangay }},
+                {{ user.city }}, {{ user.province }} {{ user.zip_code }}</p>
+                <p><strong>Role: </strong> {{ user.role }}</p>
+            </div>
+            <div class="credentials">
+                <h2>Identification</h2>
+                <img src="{{ url_for('static', filename='uploads/' + (user.user_id_path)) }}" alt="Seller ID" class="user-identification">
+            </div>
+        </div>
+        {% else %}
+        <p>User not found.</p>
+        {% endif %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/seller-application.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <title>Seller Registration</title>
+</head>
+<body data-success="{{ 'true' if success else 'false' }}">
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="/login"><img src="../static/images/MIDLOGO.png" alt="Logo"></a>
+            </div>
+            <h2>Seller Registration</h2>
+        </nav>
+    </header>
+
+    <div class="user-content">
+        <!-- Seller Registration Form -->            
+        <form class="seller-registration-form" action="/seller-application" method="POST" enctype="multipart/form-data">
+            <!-- Seller Info Container -->
+            <div class="seller-info-container">
+                <h3>Seller Information</h3>
+                <input type="hidden" name="role" value="seller">
+        
+                <div class="form-group">
+                    <label for="first-name">First Name:</label>
+                    <input type="text" id="first_name" name="first_name" placeholder="Enter your first name" required>
+                </div>
+                <div class="form-group">
+                    <label for="last-name">Last Name:</label>
+                    <input type="text" id="last_name" name="last_name" placeholder="Enter your last name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password:</label>
+                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password " required>
+                </div>
+            </div>
+        
+            <!-- Address -->
+            <div class="address-container">
+                <h3>Shop Address</h3>
+                
+                <label for="province">Province</label>
+                <select id="province" name="province" required>
+                    <option value="" disabled selected>Select Province</option>
+                </select>
+            
+                <label for="city">City</label>
+                <select id="city" name="city" required>
+                    <option value="" disabled selected>Select City</option>
+                </select>
+            
+                <label for="barangay">Barangay</label>
+                <select id="barangay" name="barangay" required>
+                    <option value="" disabled selected>Select Barangay</option>
+                </select>
+                <label for="street">Street</label>
+                <input type="text" name="street" placeholder="Street" required>
+        
+                <label for="zip">ZIP Code:</label>
+                <input type="number" name="zip" min="1" max="9999" placeholder="ZIP Code" required>
+            </div>
+        
+            <!-- Shop Info Container -->
+            <div class="shop-info-container">
+                <h3>Shop Information</h3>
+                <div class="form-group">
+                    <label for="store-name">Shop Name:</label>
+                    <input type="text" id="store-name" name="store_name" placeholder="Enter your store name" required>
+                </div>
+                <div class="form-group">
+                    <label for="seller-image">Shop Logo:</label>
+                    <img id="image-preview" src="" alt="Image Preview" style="display:none; width: 300px; height: auto; margin:0 auto; padding: 20px;">
+                    <input type="file" id="seller-image" name="seller_image" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <label for="store-description">Store Description:</label>
+                    <textarea id="store-description" name="store_description" rows="4" placeholder="Describe your store" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="contact-email">Email:</label>
+                    <input type="email" id="contact-email" name="contact_email" placeholder="Enter your email address" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact-number">Contact Number:</label>
+                    <input type="tel" id="contact-number" name="contact_number" placeholder="Enter your contact number" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="seller_id_image">Upload ID :</label>
+                <input type="file" id="seller_id_image" name="seller_id_image" accept="image/*" required>
+            </div>
+            <div class="form-group">
+                <label for="seller_certificate">Upload certificate :</label>
+                <input type="file" id="seller_certificate" name="seller_certificate" accept="image/*" required>
+            </div>
+
+            <div class="checkbox">
+                <input type="checkbox" id="terms" name="terms">
+                <label for="terms">I agree to the terms and conditions</label>
+            </div>
+
+            
+            <div class="form-group">
+                <button type="submit">Register as Seller</button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Success/Error Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p></p> <!-- This will be updated dynamically -->
+        </div>
+    </div>
+
+
+    <script src="/static/js/seller-application.js"></script>
+
+
+</body>
+</html>

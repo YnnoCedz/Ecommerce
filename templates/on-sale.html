@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/on-sale.css">
+    <script src="../static/js/homepage.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <title>On Sale</title>
+</head>
+<body>
+    <!-- Logo and Navbars -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="/homepage"><img src="../static/images/MIDLOGO.png" alt="Logo"></a>
+                 
+            </div>
+            <h1>Books, Bytes, & Blockbusters</h1> 
+            <div class="search-bar">  
+                <input type="text" id="search-input" placeholder="Search..." oninput="searchItems()">
+                <button type="button" onclick="searchItems()">
+                    <img src="../static/images/icons/search.png" alt="">
+                </button>
+                <div id="search-results" class="results-container">
+                    <!-- Results will be dynamically populated here -->
+                </div>
+            </div>
+            
+            <div class="nav-links">
+                <a href="/user-chat" class="chat"><img src="../static/images/icons/message-2-line.png" alt="">Chat</a>
+                <a href="/cart" class="cart"><img src="../static/images/icons/cart.png" alt="">Cart</a>
+                <a href="/orders-ship" class="orders"><img src="../static/images/icons/order.png" alt="">Orders</a>
+                <a href="/user-account" class="account"><img src="../static/images/icons/user-settings.png" alt="">Account</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Dropdown Menu -->
+    <nav class="dropdown-menu">
+        <li><a href="/homepage">Home</a></li>
+        <li><a href="/best-seller">Bestsellers</a></li>
+        <li><a href="/new-products">New</a></li>
+        <li><a href="/on-sale">On Sale</a></li>
+        <li><a href="#">Categories</a>
+            <ul id="submenu">
+                <li><a href="/book-products">Books</a></li>
+                <li><a href="/game-products">Games</a></li>
+                <li><a href="/movie-products">Movies</a></li>
+            </ul>
+        </li>       
+    </nav>
+
+    <!-- Flash Deals Section -->
+    <label class="ft-label">FLASH DEALS</label>
+    <div class="featured">
+        {% if promotion_image %}
+        <a href="/on-sale">
+            <img src="{{ url_for('static', filename='uploads/' + promotion_image) }}" alt="Flash Deal" class="promotion-image">
+        </a>
+        {% else %}
+        <p>No flash deals available at the moment.</p>
+        {% endif %}
+    </div>
+
+
+ 
+
+    <div class="recommended-products-section">
+        <div class="rec-label">
+            <span> Recommended Products</span>
+        </div>
+        <div class="recommended-products-grid">
+            {% for product in recommended_products %}
+            <div class="product-card">
+                <a href="{{ url_for('product_detail', product_id=product.product_id) }}">
+                    <img src="{{ url_for('static', filename='uploads/' + product.image_path) }}" alt="{{ product.product_name }}" class="product-image">
+                </a>
+                <div class="product-details">
+                    <h4 class="product-title">{{ product.product_name }}</h4>
+                    <p class="product-price">Php {{ product.price }}</p>
+                    <div class="product-rating">
+                        {% set rounded_rating = product.avg_rating|round(0) %}
+                        <!-- Display stars for the rating -->
+                        {% for star in range(rounded_rating|int) %}
+                        <i class="fas fa-star" style="color: gold;"></i>
+                        {% endfor %}
+                        {% for star in range(5 - rounded_rating|int) %}
+                        <i class="far fa-star" style="color: gold;"></i>
+                        {% endfor %}
+                        <span>({{ product.avg_rating|round(1) }})</span>
+                    </div>
+                    
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+        
+    <div class="voucher-section">
+        <h2 class="voucher-title">Exclusive Vouchers</h2>
+        <div class="voucher-grid">
+            {% for voucher in vouchers %}
+            <div class="voucher-item">
+            <img src="{{ url_for('static', filename='uploads/' + voucher.voucher_image) }}" alt="{{ voucher.description }}">
+                <p class="voucher-description">{{ voucher.description }}</p>
+                <button class="redeem-btn">{{ voucher.voucher_code }}</button>
+            </div>
+            {% endfor %}
+            {% if not vouchers %}
+            <p>No vouchers available at the moment.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+
+
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="../static/images/MIDLOGO.png" alt="Logo">
+            </div>
+
+            <ul class="footer-links">
+                <li><a href="#" onclick="openAboutUsModal()">About Us</a></li>
+                <li><a href="#" onclick="openPrivacyPolicyModal()">Privacy Policy</a></li>
+                <li><a href="/customer-service">Customers Service</a></li>
+                <li><a href="#" onclick="openFAQsModal()">FAQs</a></li>
+            </ul>
+            
+            
+            <div class="footer-content-right">
+                <div class="contact-us">
+                    <li>Contact us:</li>
+                    <ul>Email:BBB@gmail.com</ul>
+                    <ul>Phone #:09690272222</ul>
+                </div>
+                <div class="follow-us">
+                    <span>Follow us:</span>
+                    <div class="social-icons">                   
+                        <a href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#ffffff" d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z"/></svg></a>
+                        <a href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#ffffff" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg></a>
+                        <a href="#"><svg class="svg-inline--fa fa-envelope" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="envelope" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"></path></svg></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+     <!-- Modal for Privacy Policy -->
+     <div id="privacyPolicyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePrivacyPolicyModal()">&times;</span>
+            <h2>Privacy Policy</h2>
+            <p><strong>Effective Date:</strong> December 2024</p>
+            <p>
+                At Books Bytes and Blockbusters, your privacy is important to us. This policy explains how we collect, use, and protect your personal information.
+            </p>
+            <ol>
+                <li><strong>Information We Collect</strong>
+                    <ul>
+                        <li>Personal Info: When you make a purchase, we collect details like your name, email, shipping address, and payment information.</li>
+                        <li>Non-Personal Info: We also gather information like your IP address and browsing behavior through cookies.</li>
+                    </ul>
+                </li>
+                <li><strong>How We Use Your Information</strong>
+                    <ul>
+                        <li>Process and deliver your orders.</li>
+                        <li>Improve our website and services.</li>
+                        <li>Send updates and promotional offers (with your permission).</li>
+                        <li>Respond to customer support requests.</li>
+                    </ul>
+                </li>
+                <li><strong>Sharing Your Information</strong>
+                    <p>We do not sell your personal information. We may share it with trusted partners (like payment processors or delivery services) to help fulfill your order.</p>
+                </li>
+                <li><strong>Cookies</strong>
+                    <p>We use cookies to improve your shopping experience. You can control cookies through your browser settings.</p>
+                </li>
+                <li><strong>Data Security</strong>
+                    <p>We use security measures to protect your information, but no system is completely secure. We take reasonable steps to keep your data safe.</p>
+                </li>
+                <li><strong>Your Rights</strong>
+                    <ul>
+                        <li>Access or update your information.</li>
+                        <li>Opt-out of promotional emails anytime.</li>
+                        <li>Request to delete your personal data (with some exceptions).</li>
+                    </ul>
+                </li>
+                <li><strong>Third-Party Links</strong>
+                    <p>Our site may link to other websites. We’re not responsible for their privacy practices, so please check their policies.</p>
+                </li>
+                <li><strong>Children’s Privacy</strong>
+                    <p>Our site is strictly not for children under 13, and we do not knowingly collect their information.</p>
+                </li>
+                <li><strong>Changes to This Policy</strong>
+                    <p>We may update this policy. Any changes will be posted here with an updated date.</p>
+                </li>
+                <li><strong>Contact Us</strong>
+                    <p>If you have questions, reach out to us at:</p>
+                    <p><strong>Books Bytes and Blockbusters</strong><br>BBB@gmail.com<br>09690272222</p>
+                </li>
+            </ol>
+            <p>By using our website, you agree to our privacy practices as outlined above.</p>
+        </div>
+    </div>
+
+    <div id="aboutUsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAboutUsModal()">&times;</span>
+            <h2>About Us</h2>
+            <p>Welcome to <strong>Books, Bytes and Blockbusters</strong>, your ultimate destination for all things books, media, and entertainment. We are passionate about bringing the best in literature, movies, and games directly to your fingertips.</p>
+            <p>Whether you're a book lover, a film enthusiast, a gamer, or a collector of rare media, we curate an extensive selection to cater to every interest and passion.</p>
+            <p>At <strong>Books, Bytes and Blockbusters</strong>, we believe in the power of stories to inspire, educate, and entertain. Our platform offers a wide range of products—from the latest bestsellers and timeless classics, to the newest films, albums, and interactive games. With fast shipping, secure transactions, and an easy-to-use website, we aim to provide a seamless shopping experience that connects you with the content you love.</p>
+            <p>Explore, discover, and enjoy the best of books and entertainment—whether you're expanding your bookshelf or building your media collection. We're here to help you find your next great read, watch, listen, or play.</p>
+            <p>Thank you for choosing <strong>Books, Bytes and Blockbusters</strong>—where stories come alive!</p>
+        </div>
+    </div>
+
+
+    <!-- FAQs Modal -->
+    <div id="faqsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeFAQsModal()">&times;</span>
+            <h2>FAQs – Books,Bytes & Blockbusters</h2>
+            <ul>
+                <li><strong>1. What content do you cover?</strong>
+                    <p>We cover everything from books and movies to TV shows, podcasts, and even gaming. Whether you love to read, binge-watch, or game, we’ve got recommendations, reviews, and updates for you.</p>
+                </li>
+                <li><strong>2. How often are new recommendations posted?</strong>
+                    <p>We post fresh book, media, and gaming recommendations weekly. You'll always find something new to explore.</p>
+                </li>
+                <li><strong>3. Can I submit a book for review?</strong>
+                    <p>Yes, you can! We accept book submissions from authors and publishers for potential review.</p>
+                </li>
+                <li><strong>4. How do I find recommendations that match my interests?</strong>
+                    <p>You can browse by genre, theme, or category to find book, movie, TV, and game recommendations based on your preferences.</p>
+                </li>
+                <li><strong>5. Do you review all types of books?</strong>
+                    <p>Yes, we cover a wide range of genres, including fiction, non-fiction, sci-fi, fantasy, mystery, romance, and more.</p>
+                </li>
+                <li><strong>6. Do you review more than just books?</strong>
+                    <p>Yes! We also review movies, TV shows, games, podcasts, and audiobooks. Our goal is to cover all things media.</p>
+                </li>
+                <li><strong>7. How can I stay updated on new releases and trends?</strong>
+                    <p>You can check our site regularly for the latest updates on new books, media releases, and gaming trends.</p>
+                </li>
+                <li><strong>8. Do you recommend book series?</strong>
+                    <p>Absolutely! We recommend top book series across different genres for binge-reading.</p>
+                </li>
+                <li><strong>9. Can I contribute my own reviews or suggestions?</strong>
+                    <p>Yes, we love hearing from our community. You can submit your thoughts or reviews, and they may be featured.</p>
+                </li>
+                <li><strong>10. Can I participate in discussions?</strong>
+                    <p>Yes, you can join in by leaving comments on reviews and participating in forums or discussions.</p>
+                </li>
+                <li><strong>11. Do you have recommendations for kids and teens?</strong>
+                    <p>Yes, we provide age-appropriate recommendations for children’s books, young adult fiction, and family-friendly games and media.</p>
+                </li>
+                <li><strong>12. How can I suggest a book, game, or show for review?</strong>
+                    <p>You can suggest new books, games, or media you'd like us to review by contacting us directly.</p>
+                </li>
+                <li><strong>13. Are the reviews spoiler-free?</strong>
+                    <p>Most of our reviews are spoiler-free. If there are spoilers, they’re clearly marked to avoid ruining the experience.</p>
+                </li>
+                <li><strong>14. Do you review games and audiobooks?</strong>
+                    <p>Yes, we review both audiobooks and video games. Whether you’re into console gaming, mobile games, or PC games, we’ve got recommendations for you.</p>
+                </li>
+                <li><strong>15. Can I get personalized recommendations?</strong>
+                    <p>Yes, you can tell us what genres or types of content you enjoy, and we’ll provide recommendations just for you.</p>
+                </li>
+                <li><strong>16. Do you feature interviews with authors, creators, or game developers?</strong>
+                    <p>Yes, we often feature interviews with authors, filmmakers, and game developers who share insights on their work.</p>
+                </li>
+                <li><strong>17. How can I provide feedback or suggestions?</strong>
+                    <p>We appreciate your feedback! Feel free to share your thoughts with us anytime.</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+
+</body>
+</html>

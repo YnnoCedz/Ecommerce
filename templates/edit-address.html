@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/edit-address.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">  
+    <title>User Edit Address</title>
+</head>
+<body>
+    <!-- Logo and Navbars -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="/homepage"><img src="../static/images/MIDLOGO.png" alt="Logo"></a>
+                
+            </div>
+            <h1>Books, Bytes, & Blockbusters</h1> 
+            <div class="search-bar">  
+                <input type="text" id="search-input" placeholder="Search..." oninput="searchProducts()">
+                <button type="button" onclick="searchProducts()">
+                    <img src="../static/images/icons/search.png" alt="">
+                </button>
+                <div id="search-results" class="results-container">
+                    <!-- Results will be dynamically populated here -->
+                </div>
+            </div>
+            
+            <div class="nav-links">
+                <a href="/user-chat" class="chat"><img src="../static/images/icons/message-2-line.png" alt="">Chat</a>
+                <a href="/cart" class="cart"><img src="../static/images/icons/cart.png" alt="">Cart</a>
+                <a href="/orders-ship" class="orders"><img src="../static/images/icons/order.png" alt="">Orders</a>
+                <a href="/user-account" class="account"><img src="../static/images/icons/user-settings.png" alt="">Account</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Dropdown Menu -->
+    <nav class="dropdown-menu">
+        <li><a href="/homepage">Home</a></li>
+        <li><a href="/best-seller">Bestsellers</a></li>
+        <li><a href="/new-products">New</a></li>
+        <li><a href="/on-sale">On Sale</a></li>
+        <li><a href="#">Categories</a>
+            <ul id="submenu">
+                <li><a href="/book-products">Books</a></li>
+                <li><a href="/game-products">Games</a></li>
+                <li><a href="/movie-products">Movies</a></li>
+            </ul>
+        </li>       
+    </nav>
+
+    <!-- Main content -->
+    <div class="user-container">
+        <div class="user-sidebar">
+            <aside class="sidebar">
+                <div class="profile-image">
+                    <img src="{{ url_for('static', filename=user['profile_image_url'] if user['profile_image_url'] else 'images/default-user.png') }}" alt="Profile Picture" class="profile-img">
+                    <label for="full_name">{{ user['first_name'] }} {{ user['last_name'] }}</label>
+                </div>            
+                <ul>
+                    <li><a href="/user-account">My Profile</a></li>
+                    <li><a href="/user-address">Addresses</a></li>
+                    <li><a href="/user-privacy">Privacy Settings</a></li>
+                    <li><a href="#">Customer Service</a></li>
+                </ul>
+                <div class="logout-btn">
+                    <a href="/logout">Logout</a>
+                </div>
+            </aside>      
+        </div>
+        
+        <div class="content">
+            <h2>Edit Address</h2>
+            <form id="addressForm" action="{{ url_for('edit_address', user_id=user['user_id']) }}" method="POST">
+                <div class="form-group">
+                    <label for="province">Province:</label>
+                    <select id="province" name="province" onchange="loadCities()" required>
+                        <option value="" selected>Select Province</option>
+                        {% for province in provinces %}
+                            <option value="{{ province['code'] }}">{{ province['name'] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="city">City/Municipality:</label>
+                    <select id="city" name="city" onchange="loadBarangays()" required>
+                        <option value="" selected>Select City/Municipality</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="barangay">Barangay:</label>
+                    <select id="barangay" name="barangay" required>
+                        <option value="" selected>Select Barangay</option>
+                    </select>
+                </div>
+                                
+        
+                <label for="street">Street:</label>
+                <input type="text" id="street" name="street" value="{{ user['street'] }}" required>
+        
+                <label for="zip_code">Zip Code:</label>
+                <input type="text" id="zip_code" name="zip_code" value="{{ user['zip_code'] }}" required>
+        
+                <button type="submit">Update Address</button>
+            </form>
+        </div>
+    </div>
+        
+        
+
+    <!-- Modal for confirmation -->
+    <div id="confirmModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('confirmModal')">&times;</span>
+            <p>Are you sure you want to update the address?</p>
+            <button onclick="submitForm()">Yes</button>
+            <button onclick="closeModal('confirmModal')">No</button>
+        </div>
+    </div>
+
+    <!-- Modal for success message -->
+    <div id="successModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('successModal')">&times;</span>
+            <p>Address updated successfully!</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="../static/images/MIDLOGO.png" alt="Logo">
+            </div>
+
+            <ul class="footer-links">
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Customers Service</a></li>
+                <li><a href="#">Contacts</a></li>
+            </ul>
+            
+            <div class="follow-us">
+                <span>Follow us:</span>
+                <div class="social-icons">
+                    
+                    <a href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#ffffff" d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z"/></svg></a>
+                    <a href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#ffffff" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg></a>
+                    <a href="#"><svg class="svg-inline--fa fa-envelope" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="envelope" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"></path></svg></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+   
+
+    <script src="/static/js/edit-address.js"></script>
+
+
+</body>
+</html>

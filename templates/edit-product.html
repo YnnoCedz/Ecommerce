@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/edit-product.css">
+    <title>Edit Product</title>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+        <h1>Books, Bytes and Blockbusters</h1>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/seller-homepage">Dashboard</a></li>
+            <li><a href="#">My Products</a>
+                <ul class="submenu">
+                    <li><a href="/view-products">View Products</a></li>
+                    <li><a href="/add-product">Add Product</a></li>
+                </ul>
+            </li>
+            <li><a href="/seller-shipping-center">Shipping Center</a></li>
+            <li><a href="/sales-report">Sales Report</a></li>
+            <li><a href="#">Customer Service</a>
+                <ul class="submenu">
+                    <li><a href="/chat-services">Chat Management</a></li>
+                </ul>
+            </li>
+            <li><a href="/seller-account">Account Settings</a></li>
+        </ul>
+        <div class="logout-btn">
+            <a href="/logout">Logout</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="edit-product">
+        <h2>Edit Product</h2>
+        <div class="product-edit-container">
+            <!-- Product Details Section -->
+            <form id="editProductForm" action="{{ url_for('update_product', product_id=product['product_id']) }}" method="post" enctype="multipart/form-data" class="product-form">
+                <div class="form-left">
+                    <label for="product_name">Product Name:</label>
+                    <input type="text" id="product_name" name="product_name" value="{{ product['product_name'] }}" required>
+    
+                    <label for="product_description">Description:</label>
+                    <textarea id="product_description" name="product_description" required>{{ product['description'] }}</textarea>
+    
+                    <label for="product_price">Price:</label>
+                    <input type="number" id="product_price" name="product_price" step="0.01" value="{{ product['price'] }}" required>
+    
+                    <label for="category">Category:</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="books" {% if product['category'] == 'books' %}selected{% endif %}>Books</option>
+                        <option value="games" {% if product['category'] == 'games' %}selected{% endif %}>Games</option>
+                        <option value="movies" {% if product['category'] == 'movies' %}selected{% endif %}>Movies</option>
+                    </select>
+    
+                    <label for="subcategory">Subcategory:</label>
+                    <div id="subcategory-container" class="subcategory-container">
+                        <!-- Checkboxes dynamically generated -->
+                        {% for sub in subcategories %}
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="subcategories" value="{{ sub['id'] }}" {% if sub['checked'] %}checked{% endif %}>
+                            {{ sub['name'] }}
+                        </label>
+                        {% endfor %}
+                    </div>
+
+                </div>
+    
+                <!-- Product Image Section -->
+                <div class="form-right">
+                    <div class="image-container">
+                        <img id="preview-image" src="{{ url_for('static', filename='uploads/' + (product['image_path'] if product['image_path'] else 'default-image.jpg')) }}" alt="Product Image">
+                    </div>
+                    <label class="image-label" for="product_image">Select Image</label>
+                    <input type="file" id="product_image" name="product_image" class="file-input" onchange="previewNewImage(event)">                    
+                    <button type="submit" class="action-btn">Update Product</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Stocks Update Section -->
+        <div class="stocks-update-container">
+            <h3>Update Stock Quantity</h3>
+            <label>Current Stocks: {{ product['stocks'] }}</label>
+            <form id="updateStocksForm" action="{{ url_for('update_stocks', product_id=product['product_id']) }}" method="post">
+                <label for="update_stocks">Stocks:</label>
+                <input type="number" id="update_stocks" name="product_stocks" required>
+                <button type="submit" class="update-btn">Update Stocks</button>
+            </form>
+        </div>
+    </main>
+    
+    
+
+    
+    <!-- Validation Error Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeErrorModal">&times;</span>
+            <h2>Error</h2>
+            <p id="modalErrorMessage">Some fields are missing or invalid.</p>
+            <button class="action-btn" id="dismissErrorModal">Okay</button>
+        </div>
+    </div>
+
+   <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h2>Confirm Update</h2>
+            <p id="confirmMessage">Are you sure you want to update this product?</p>
+            <button class="action-btn" id="confirmYesBtn">Yes</button>
+            <button class="cancel-btn" id="confirmCancelBtn">Cancel</button>
+        </div>
+    </div>
+
+    <div id="successModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" id="closeSuccessModal">&times;</span>
+            <h2>Success!</h2>
+            <p>The product has been updated successfully.</p>
+            <button class="action-btn" id="confirmSuccessModal">Okay</button>
+        </div>
+    </div>
+    
+
+
+    <script src="/static/js/edit-product.js"></script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/admin.css">
+    <title>Admin - Manage Vouchers</title>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+            <h1>Books, Bytes and Blockbusters</h1>
+        </div>
+    </header>
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/admin">Dashboard</a></li>
+            <li><a href="">Accounts Management</a>
+                <ul class="submenu">
+                    <li><a href="/admin_users">Buyer</a></li>
+                    <li><a href="/admin_sellers">Seller</a></li>
+                    <li><a href="/view_user_applicants">Applicants</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="marketing-btn">Marketing</a>
+                <ul class="submenu">
+                    <li><a href="/admin/upload-promotion">Promotions</a></li>
+                    <li><a href="/admin/vouchers">Vouchers</a></li>
+                </ul>
+            </li>
+            <li><a href="#" class="marketing-btn">Customer Service</a>
+                <ul class="submenu">
+                    <li><a href="/admin_user_chat_management">Buyers</a></li>
+                    <li><a href="/admin_seller_chat_management">Sellers</a></li>
+                </ul>
+            </li>
+            <li><a href="/logout" class="account-btn">Logout</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="voucher-section">
+            <h2 class="voucher-title">Manage Vouchers</h2>
+            <a href="/add-voucher" class="redeem-btn">Add New Voucher</a>
+            <div class="voucher-grid">
+                {% if vouchers %}
+                    {% for voucher in vouchers %}
+                    <div class="voucher-item">
+                        <img src="{{ url_for('static', filename=voucher.voucher_image.split('static/')[-1]) }}" alt="Voucher Image">
+                        <h3 class="voucher-code">{{ voucher.voucher_code }}</h3>
+                        <p class="voucher-description">{{ voucher.description }}</p>
+                        <p class="voucher-discount"><strong>Discount:</strong> {{ voucher.discount }}%</p>
+                        <p class="voucher-category"><strong>Category:</strong> {{ voucher.category }}</p>
+                        <div class="button-group">
+                            <button onclick="confirmDelete({{ voucher.id }})" class="redeem-btn">Delete</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="no-vouchers">No vouchers available. Please add new vouchers.</p>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Are you sure you want to delete this voucher?</h2>
+            <div class="button-group">
+                <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+                <form id="deleteForm" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-confirm">Confirm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let deleteUrl = "";
+
+        function confirmDelete(voucherId) {
+            // Open the modal
+            const modal = document.getElementById('confirmationModal');
+            modal.style.display = 'block';
+
+            // Set the form action to the correct URL
+            const deleteForm = document.getElementById('deleteForm');
+            deleteForm.action = `/delete-voucher/${voucherId}`;
+        }
+
+        function closeModal() {
+            // Close the modal
+            const modal = document.getElementById('confirmationModal');
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside the modal
+        window.onclick = function(event) {
+            const modal = document.getElementById('confirmationModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+    </script>
+
+</body>
+</html>

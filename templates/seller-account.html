@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/seller-account.css">
+    <title>Account Settings</title>
+</head>
+<body>
+    <header>
+        <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+        <h1>Books, Bytes and Blockbusters - Account Management</h1>
+    </header>
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/seller-homepage">Dashboard</a></li>
+            <li><a href="#">My Products</a>
+                <ul class="submenu">
+                    <li><a href="/view-products">View Products</a></li>
+                    <li><a href="/add-product">Add Product</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="/seller-shipping-center" class="orders-btn">Shipping Center</a>
+            </li>
+            <li>
+                <a href="/sales-report" class="orders-btn">Sales Report</a>
+            </li>
+            <li><a href="#" class="customer-service-btn">Customer Service</a>   
+                <ul class="submenu">
+                    <li><a href="/chat-management" class="chat">Chat Management</a></li>'
+                    <li><a href="/seller-service" class="chat">Chat With Admin</a></li>
+
+                </ul>
+            </li>
+            <li><a href="/seller-account" class="account-btn">Account Settings</a></li>
+        </ul>
+        <!-- Logout Button at Bottom -->
+        <div class="logout-btn">
+            <a href="/logout">Logout</a>
+        </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content">
+        <h2>Manage Your Account Settings</h2><br>
+        <section class="account-settings">
+            
+            <!-- Change Email Section -->
+            <div class="settings-section">
+                <h3>Change Email</h3>
+                <form action="{{ url_for('seller_update_email') }}" method="POST" class="settings-form">
+                    <div class="form-group">
+                        <label for="new-email">Update Email:</label>
+                        <input type="email" id="new-email" name="new-email" placeholder="Enter new email" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Update Email</button>
+                </form>
+            </div>
+
+            <!-- Change Password Section -->
+            <div class="settings-section">
+                <h3>Change Password</h3>
+                <form action="{{ url_for('seller_update_password') }}" method="POST" class="settings-form">
+                    <div class="form-group">
+                        <label for="new_password">Change Password:</label>
+                        <input type="password" id="new_password" name="new_password" placeholder="Enter New password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Update Password</button>
+
+                </form>
+            </div>
+
+            <!-- Change Phone Number Section -->
+            <div class="settings-section">
+                <h3>Change Phone Number</h3>
+                <form action="{{ url_for('seller_update_phone') }}" method="POST" class="settings-form">
+                    <div class="form-group">
+                        <label for="new-phone">Change Phone Number:</label>
+                        <input type="text" id="new-phone" name="new-phone" placeholder="Enter new phone number" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Update Phone Number</button>
+                </form>
+            </div>
+
+            <!-- Shop Information Section -->
+            <div class="settings-section">
+                <h3>Update Shop Information</h3>
+                <form action="{{ url_for('update_shop_info') }}" method="POST" class="settings-form" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="shop_name">Shop Name:</label>
+                        <input type="text" id="shop_name" name="shop_name" placeholder="Enter shop name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="store_description">Store Description:</label>
+                        <textarea id="store_description" name="store_description" placeholder="Enter store description" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Update Details</button>
+                </form>
+                
+                <form action="{{ url_for('update_seller_image') }}" method="POST" class="settings-form" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="seller_image">Upload Profile Image:</label>
+                        <input type="file" id="seller_image" name="seller_image" accept=".jpg, .jpeg, .png" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Update Store Profile</button>
+                </form>
+                
+                <form action="{{ url_for('update_id') }}" method="POST" class="settings-form" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="seller_id_path">Upload ID:</label>
+                        <input type="file" id="seller_id_path" name="seller_id_path" accept=".jpg, .jpeg, .png, .pdf" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Update ID</button>
+                </form>
+
+                <form action="{{ url_for('update_certificate') }}" method="POST" class="settings-form" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="seller_certificate_path">Upload Certificate:</label>
+                        <input type="file" id="seller_certificate_path" name="seller_certificate_path" accept=".jpg, .jpeg, .png, .pdf" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Update Certificate</button>
+                </form>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Confirm Update</h2>
+            <p id="modalMessage">Are you sure you want to proceed with this update?</p>
+            <div class="modal-buttons">
+                <button id="confirmButton" class="confirm-btn" onclick="submitUpdate()">Confirm</button>
+                <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeSuccessModal()">&times;</span>
+            <h2>Update Successful!</h2>
+            <p>Your information has been updated successfully.</p>
+            <button onclick="closeSuccessModal()" class="confirm-btn">OK</button>
+        </div>
+    </div>
+
+
+    <script src="/static/js/seller-account.js"></script>
+
+</body>
+</html>

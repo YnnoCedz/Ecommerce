@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/user_management.css">
+    <title>Manage Couriers</title>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+            <h1>Books, Bytes and Blockbusters</h1>
+        </div>
+    </header>
+
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/admin">Dashboard</a></li>
+            <li><a href="">Accounts Management</a>
+                <ul class="submenu">
+                    <li><a href="/admin_users">Buyer</a></li>
+                    <li><a href="/admin_sellers">Seller</a></li>
+                    <li><a href="/admin_couriers">Couriers</a></li>
+                    <li><a href="/view_user_applicants">Applicants</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="marketing-btn">Marketing</a>
+                <ul class="submenu">
+                    <li><a href="/admin/upload-promotion">Promotions</a></li>
+                    <li><a href="/admin/vouchers">Vouchers</a></li>
+                </ul>
+            </li>
+            <li><a href="#" class="marketing-btn">Customer Service</a>
+                <ul class="submenu">
+                    <li><a href="/admin_user_chat_management">Buyers</a></li>
+                    <li><a href="/admin_seller_chat_management">Sellers</a></li>
+                </ul>
+            </li>
+            <li><a href="/logout" class="account-btn">Logout</a></li>
+        </ul>
+    </aside>
+
+    <main>
+        <h2>Manage Couriers</h2>
+        <table class="courier-table">
+            <thead>
+                <tr>
+                    <th>ID No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>Status</th>
+                    <th>Archived</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for courier in couriers %}
+                <tr>
+                    <td>{{ courier.id }}</td>
+                    <td>{{ courier.first_name }} {{ courier.last_name }}</td>
+                    <td>{{ courier.email }}</td>
+                    <td>{{ courier.phone_number }}</td>
+                    <td>{{ courier.status }}</td>
+                    <td>{{ 'True' if courier.archived == 1 else 'False' }}</td>
+                    <td>
+                        <a href="{{ url_for('view_courier', courier_id=courier.id) }}" class="btn">View Profile</a>
+                        {% if courier.archived == 0 %}
+                        <button data-courier-id="{{ courier.id }}" data-action="archive" onclick="showModal(this)" class="btn">Archive</button>
+                        {% else %}
+                        <button data-courier-id="{{ courier.id }}" data-action="retrieve" onclick="showModal(this)" class="btn">Retrieve</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Modal for confirmation -->
+        <div id="confirmationModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="hideModal()">&times;</span>
+                <p id="modalText">Are you sure?</p>
+                <form id="modalForm" method="post">
+                    <button type="submit" class="btn">Confirm</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function showModal(button) {
+        const sellerId = button.getAttribute('data-courier-id');
+        const action = button.getAttribute('data-action');
+        const modal = document.getElementById("confirmationModal");
+        const modalText = document.getElementById("modalText");
+        const modalForm = document.getElementById("modalForm");
+
+        modalText.textContent = action === 'archive' ? 
+            "Are you sure you want to archive this courier applicant?" : 
+            "Are you sure you want to retrieve this courier applicant?";
+
+        modalForm.action = `/toggle_archived/${sellerId}?action=${action}`;
+        modal.style.display = "block";
+    }
+
+
+    function hideModal() {
+        document.getElementById("confirmationModal").style.display = "none";
+    }
+
+    </script>
+</body>
+</html>

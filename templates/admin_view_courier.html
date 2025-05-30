@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/user_management.css">
+    <title>courier Profile</title>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <img src="{{ url_for('static', filename='images/MIDLOGO.png') }}" alt="Company Logo" class="logo">
+            <h1>Books, Bytes and Blockbusters</h1>
+        </div>
+    </header>
+
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/admin">Dashboard</a></li>
+            <li><a href="">Accounts Management</a>
+                <ul class="submenu">
+                    <li><a href="/admin_users">Buyer</a></li>
+                    <li><a href="/admin_sellers">Seller</a></li>
+                    <li><a href="/view_courier_applicants">Applicants</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="marketing-btn">Marketing</a>
+                <ul class="submenu">
+                    <li><a href="/admin/upload-promotion">Promotions</a></li>
+                    <li><a href="/admin/vouchers">Vouchers</a></li>
+                </ul>
+            </li>
+            <li><a href="#" class="marketing-btn">Customer Service</a>
+                <ul class="submenu">
+                    <li><a href="/admin_user_chat_management">Buyers</a></li>
+                    <li><a href="/admin_seller_chat_management">Sellers</a></li>
+                </ul>
+            </li>
+            <li><a href="/logout" class="account-btn">Logout</a></li>
+        </ul>
+    </aside>
+
+    <main>
+        {% if courier %}
+        <div class="profile-container">
+            <div class="profile-header">
+                <img src="{{ url_for('static', filename='uploads/' + (courier.profile_image_url if courier.profile_image_url else 'default-user.png')) }}" alt="Profile Picture" class="profile-pic">
+                <h2>{{ courier.first_name }} {{ courier.last_name }}</h2>
+            </div>
+            <div class="profile-details">
+                <p><strong>Email: </strong> {{ courier.email }}</p>
+                <p><strong>Phone: </strong> {{ courier.phone_number }}</p>
+                <p><strong>Address: </strong>{{ courier.street }}, {{ courier.barangay }},
+                {{ courier.city }}, {{ courier.province }} {{ courier.zip_code }}</p>
+                <p><strong>Role: </strong> {{ courier.role }}</p>
+            </div>
+            <div class="credentials">
+                <h2>Identification</h2>
+                <img src="{{ url_for('static', filename='uploads/' + (courier.license_image)) }}" class="courier-identification">
+            </div>
+            <div class="credentials">
+                <h2>Official Receipt</h2>
+                <img src="{{ url_for('static', filename='uploads/' + (courier.receipt_image)) }}" class="courier-identification">
+            </div>
+            <div class="credentials">
+                <h2>Certificate of Registration</h2>
+                <img src="{{ url_for('static', filename='uploads/' + (courier.registration_image)) }}" class="courier-identification">
+            </div>
+        </div>
+        {% else %}
+        <p>courier not found.</p>
+        {% endif %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/sales-report.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Sales Report</title>
+</head>
+<body>
+
+    
+    <!-- Header -->
+    <header>
+        <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+        <h1>Books, Bytes and Blockbusters - Sales Report</h1>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/seller-homepage">Dashboard</a></li>
+            <li><a href="#">My Products</a>
+                <ul class="submenu">
+                    <li><a href="/view-products">View Products</a></li>
+                    <li><a href="/add-product">Add Product</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="/seller-shipping-center" class="orders-btn">Shipping Center</a>
+            </li>
+            <li>
+                <a href="/sales-report" class="orders-btn">Sales Report</a>
+            </li>
+            <li><a href="#" class="customer-service-btn">Customer Service</a>   
+                <ul class="submenu">
+                    <li><a href="/chat-management" class="chat">Chat Management</a></li>'
+                    <li><a href="/seller-service" class="chat">Chat With Admin</a></li>
+
+                </ul>
+            </li>
+            <li><a href="/seller-account" class="account-btn">Account Settings</a></li>
+        </ul>
+        <!-- Logout Button at Bottom -->
+        <div class="logout-btn">
+            <a href="/logout">Logout</a>
+        </div>
+    </aside>
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="dashboard-cards">
+            <div class="card">
+                <h3>Total Sales</h3>
+                <p>Php {{ total_sales or 0 }}</p>
+            </div>
+            <div class="card">
+                <h3>Net Profit</h3>
+                <p>Php {{ net_profit or 0 }}</p>
+            </div>
+            <div class="card">
+                <h3>Total Items Sold</h3>
+                <p>{{ total_items_sold or 0 }}</p>
+            </div>
+            <div class="card">
+                <h3>Total Stocks</h3>
+                <p>{{ total_stocks or 0 }}</p>
+            </div>
+        </div>
+
+
+        <div class="date-filter">
+            <!-- Filter Form -->
+            <form method="GET" action="/sales-report" class="filter-form">
+                <label for="filter-type">Filter By:</label>
+                <select id="filter-type" name="filter_type" onchange="toggleDateFields(this.value)">
+                    <option value="all" {% if filter_type == 'all' %}selected{% endif %}>All</option>
+                    <option value="today" {% if filter_type == 'today' %}selected{% endif %}>Today</option>
+                    <option value="this_week" {% if filter_type == 'this_week' %}selected{% endif %}>This Week</option>
+                    <option value="this_month" {% if filter_type == 'this_month' %}selected{% endif %}>This Month</option>
+                    <option value="custom" {% if filter_type == 'custom' %}selected{% endif %}>Custom Range</option>
+                </select>
+
+                <div id="custom-date-fields" style="display: {{ 'block' if filter_type == 'custom' else 'none' }};">
+                    <label for="start-date">Start Date:</label>
+                    <input type="date" id="start-date" name="start_date" value="{{ start_date }}">
+                    <label for="end-date">End Date:</label>
+                    <input type="date" id="end-date" name="end_date" value="{{ end_date }}">
+                </div>
+            
+                <button type="submit">Apply Filter</button>
+            </form>
+
+
+        </div>
+
+
+        <div class="data-preview">
+        <h4>Sales Report Preview:</h4>
+
+        <div class="table-container">
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>Order No</th>
+                        <th>Product Name</th>
+                        <th>Quantity Sold</th>
+                        <th>Total Price</th>
+                        <th>Net Profit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if order_details %}
+                        {% for order in order_details %}
+                        <tr>
+                            <td>{{ order['order_id'] }}</td>
+                            <td class="prod_name">{{ order['product_name'] }}</td>
+                            <td>{{ order['quantity'] }}</td>
+                            <td>Php {{ order['total_price'] }}</td>
+                            <td>Php {{ order['net_profit'] }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6">No completed orders available</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        
+        
+        <div class="date-filter">
+        
+            <!-- Download Sales Report Button -->
+            <h3>Download Sales Report:</h3>
+            <form method="GET" action="/download-sales-report">
+                <input type="hidden" name="filter_type" value="{{ filter_type }}">
+                <input type="hidden" name="start_date" value="{{ start_date }}">
+                <input type="hidden" name="end_date" value="{{ end_date }}">
+                <button type="submit" class="print-sales_report">Download PDF</button>
+            </form>
+        </div>
+
+
+
+
+    </main>
+
+
+    <script>
+    // function downloadSalesReport() {
+    //     window.location.href = '/download-sales-report';
+    // }
+    function toggleDateFields(filterType) {
+            const customDateFields = document.getElementById('custom-date-fields');
+            customDateFields.style.display = filterType === 'custom' ? 'block' : 'none';
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/chat-with-admin.css">
+    <title>Seller Chat Management</title>
+</head>
+<body>
+
+    <header>
+        <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+        <h1>Books, Bytes and Blockbusters</h1>
+    </header>
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/seller-homepage">Dashboard</a></li>
+            <li><a href="#">My Products</a>
+                <ul class="submenu">
+                    <li><a href="/view-products">View Products</a></li>
+                    <li><a href="/add-product">Add Product</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="/seller-shipping-center" class="orders-btn">Shipping Center</a>
+            </li>
+            <li>
+                <a href="/sales-report" class="orders-btn">Sales Report</a>
+            </li>
+            <li><a href="#" class="customer-service-btn">Customer Service</a>   
+                <ul class="submenu">
+                    <li><a href="/chat-management" class="chat">Chat Management</a></li>'
+                    <li><a href="/seller-service" class="chat">Chat With Admin</a></li>
+
+                </ul>
+            </li>
+            <li><a href="/seller-account" class="account-btn">Account Settings</a></li>
+        </ul>
+        <!-- Logout Button at Bottom -->
+        <div class="logout-btn">
+            <a href="/logout">Logout</a>
+        </div>
+    </aside>
+
+    <!-- Main Chat Container -->
+    <div class="chat-container">
+        <div class="user-content">
+            <h2>Chat With Admin</h2>
+                    <div class="chat">
+                        <div class="chat-body">
+                            <div class="chat-history" id="chat-history">
+                                {% if messages %}
+                                    {% for message in messages %}
+                                    <div class="message {{ 'sent' if message.sender_id == seller['seller_id'] else 'received' }}">
+                                        <div class="message-bubble">
+                                                <p>{{ message.message }}</p>
+                                                {% if message.attachment_url %}
+                                                    <a href="{{ url_for('static', filename=message.attachment_url) }}" target="_blank">View Attachment</a>
+                                                {% endif %}
+                                                <span class="timestamp">{{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <p>No messages yet. Start the conversation!</p>
+                                {% endif %}
+                            </div>
+                            
+                        </div>
+                        <!-- Input Form -->
+                        <form id="message-form" method="POST" enctype="multipart/form-data">
+                            <div class="form-input">
+                                <label for="file-upload" class="file-upload-label">
+                                    <img src="/static/images/icons/upload-icon.png" alt="Upload" class="upload-icon">
+                                </label>
+                                <input type="file" id="file-upload" name="attachment_url" class="file-input" style="display:none;">
+                                <textarea name="message" id="message-input" placeholder="Type your message..." required></textarea>
+                                <button type="submit" class="send-button">Send</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+ 
+    </div>
+
+    
+
+    <!-- JavaScript -->
+    <script>
+        function fetchChatHistory() {
+            const chatHistory = document.getElementById("chat-history");
+            chatHistory.innerHTML = "<p>Loading...</p>"; // Loading indicator
+
+            fetch('/chat/history')
+                .then(response => response.json())
+                .then(data => {
+                    chatHistory.innerHTML = "";
+                    data.messages.forEach(msg => {
+                        const div = document.createElement("div");
+                        div.className = `message ${msg.sent ? "sent" : "received"}`;
+                        div.innerHTML = `
+                            <div class="message-bubble">
+                                <p>${msg.text}</p>
+                                ${msg.attachment_url ? `<a href="${msg.attachment_url}" target="_blank">View Attachment</a>` : ""}
+                                <span class="timestamp">${msg.timestamp}</span>
+                            </div>
+                        `;
+                        chatHistory.appendChild(div);
+                    });
+                    chatHistory.scrollTop = chatHistory.scrollHeight; // Scroll to the bottom
+                });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+        // Fetch chat history periodically
+        setInterval(fetchChatHistory, 5000);
+
+        // Handle message submission
+        document.getElementById("message-form").addEventListener("submit", (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+
+            fetch('/chat/send/seller', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    fetchChatHistory();
+                    event.target.reset();
+                } else {
+                    alert('Error sending message: ' + data.error);
+                }
+            });
+        });
+    });
+
+    function fetchChatHistory() {
+        fetch('/seller-service')
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const chatHistory = doc.getElementById('chat-history');
+                document.getElementById('chat-history').innerHTML = chatHistory.innerHTML;
+            });
+    }
+    </script>
+</body>
+</html>

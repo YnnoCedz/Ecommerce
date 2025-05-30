@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/chat-services.css">
+    <title>Seller Chat Management</title>
+</head>
+<body>
+
+    <header>
+        <img src="../static/images/MIDLOGO.png" alt="Company Logo" class="logo">
+        <h1>Books, Bytes and Blockbusters - Chat Management</h1>
+    </header>
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/seller-homepage">Dashboard</a></li>
+            <li><a href="#">My Products</a>
+                <ul class="submenu">
+                    <li><a href="/view-products">View Products</a></li>
+                    <li><a href="/add-product">Add Product</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="/seller-shipping-center" class="orders-btn">Shipping Center</a>
+            </li>
+            <li>
+                <a href="/sales-report" class="orders-btn">Sales Report</a>
+            </li>
+            <li><a href="#" class="customer-service-btn">Customer Service</a>   
+                <ul class="submenu">
+                    <li><a href="/chat-management" class="chat">Chat Management</a></li>'
+                    <li><a href="/seller-service" class="chat">Chat With Admin</a></li>
+
+                </ul>
+            </li>
+            <li><a href="/seller-account" class="account-btn">Account Settings</a></li>
+        </ul>
+        <!-- Logout Button at Bottom -->
+        <div class="logout-btn">
+            <a href="/logout">Logout</a>
+        </div>
+    </aside>
+
+    <!-- Main Chat Container -->
+    <div class="chat-container">
+        <!-- Inbox Section -->
+        <div class="inbox">
+            <div class="header">
+                <h2>Inbox</h2>
+            </div>
+            <ul class="inbox-list">
+                {% for chat in inbox %}
+                <li class="inbox-item {{ 'active' if chat.user_id == selected_user_id else '' }} {{ 'unread' if chat.seen_status == 0 else 'read' }}">
+                    <div class="inbox-content">
+                        <a href="/chat/{{ chat.user_id }}" class="inbox-link">
+                            <img 
+                                src="{{ url_for('static', filename=chat.profile_image_url if chat.profile_image_url else 'images/default-user.png') }}" 
+                                alt="User Image" 
+                                class="user-image">
+                            <div class="inbox-details">
+                                <p class="email">{{ chat.email }}</p> 
+                                <p class="message-preview">{{ chat.last_message }}</p>
+                            </div>
+                            <span class="timestamp">
+                                {{ chat.last_message_time.strftime('%H:%M') if chat.last_message_time else '---' }}
+                            </span>
+                        </a>
+                    </div>
+                </li>
+                {% else %}
+                <li class="no-inbox">
+                    <p>No chats available</p>
+                </li>
+                {% endfor %}
+            </ul>                       
+        </div>
+
+        <!-- Chat Section -->
+        <div class="chat">
+            <div class="chat-body">
+                <div class="chat-history" id="chat-history">
+                    {% for message in messages %}
+                    <div class="message {{ 'sent' if message.sender_id == session['seller_id'] else 'received' }}">
+                        <div class="message-bubble">
+                            <p>{{ message.message }}</p>
+                            {% if message.attachment_url %}
+                                <a href="{{ url_for('static', filename=message.attachment_url) }}" target="_blank">View Attachment</a>
+                            {% endif %}
+                            <span class="timestamp">{{ message.timestamp }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <form id="message-form" method="POST" action="/chat/send/{{ selected_user_id }}" enctype="multipart/form-data">
+                    <div class="form-input">
+                        <label for="file-upload" class="file-upload-label">
+                            <img src="/static/images/icons/upload-icon.png" alt="Upload" class="upload-icon">
+                        </label>
+                        <input type="file" id="file-upload" name="attachment_url" class="file-input" style="display:none;">
+                        <textarea name="message" id="message-input" placeholder="Type your message..." required></textarea>
+                        <button type="submit" class="send-button">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<script src="/static/js/chat-management.js">
+</script>
+
+
+</body>
+</html>

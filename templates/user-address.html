@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../static/user-address.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">    
+  <title>User Settings</title>
+</head>
+<body>
+
+  <!-- Logo and Navbars -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">
+        <a href="/homepage"><img src="../static/images/MIDLOGO.png" alt="Logo"></a>
+      </div>
+      <h1>Books, Bytes, & Blockbusters</h1> 
+      <div class="search-bar">  
+        <input type="text" id="search-input" placeholder="Search..." oninput="searchItems()">
+        <button type="button" onclick="searchItems()">
+          <img src="{{ url_for('static', filename='images/icons/search.png') }}" alt="">
+        </button>
+        <div id="search-results" class="results-container">
+          <!-- Results will be dynamically populated here -->
+        </div>
+      </div>
+      
+      <div class="nav-links">
+        <a href="/user-chat" class="chat"><img src="../static/images/icons/message-2-line.png" alt="">Chat</a>
+        <a href="/cart" class="cart"><img src="../static/images/icons/cart.png" alt="">Cart</a>
+        <a href="/orders-ship" class="orders"><img src="../static/images/icons/order.png" alt="">Orders</a>
+        <a href="/user-account" class="account"><img src="../static/images/icons/user-settings.png" alt="">Account</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Dropdown Menu -->
+  <nav class="dropdown-menu">
+    <li><a href="/homepage">Home</a></li>
+    <li><a href="/best-seller">Bestsellers</a></li>
+    <li><a href="/new-products">New</a></li>
+    <li><a href="/on-sale">On Sale</a></li>
+    <li><a href="#">Categories</a>
+      <ul id="submenu">
+        <li><a href="/book-products">Books</a></li>
+        <li><a href="/game-products">Games</a></li>
+        <li><a href="/movie-products">Movies</a></li>
+      </ul>
+    </li>       
+  </nav>
+
+  <!-- Main content -->
+  <div class="user-container">
+    <div class="user-sidebar">
+      <aside class="sidebar">
+        <div class="profile-image">
+          <img src="{{ url_for('static', filename=user['profile_image_url']) }}" alt="Profile Picture" class="profile-img">
+          <label for="full_name">{{ user['first_name'] }} {{ user['last_name'] }}</label>
+        </div>                                                                  
+        <ul>
+          <li><a href="/user-account">My Profile</a></li>
+          <li><a href="/user-address">Addresses</a></li>
+          <li><a href="/user-privacy">Privacy Settings</a></li>
+          <li><a href="/customer-service">Customer Service</a></li>
+        </ul>
+        <div class="logout-btn">
+          <a href="/logout">Logout</a>
+        </div>
+      </aside>      
+    </div>
+    
+    <div class="content">
+      <div class="header">
+        <h2>My Address</h2>
+        <button onclick="location.href='/add-address'" class="add-address-btn">Add Address</button>
+      </div>
+  
+      <!-- Default Address -->
+      <div class="address-list">
+        <div class="address-item">
+          <div class="address-details">
+            <p><strong>{{ user['first_name'] }} {{ user['last_name'] }}</strong></p>
+            <!-- The stored address is output in code format. -->
+            <p class="convert-address">
+              {{ user['street'] }}, {{ user['barangay'] }}, {{ user['city'] }}, {{ user['province'] }} - {{ user['zip_code'] }}
+            </p>
+          </div>
+          <div class="address-actions">
+            <a href="{{ url_for('edit_address', user_id=user['user_id']) }}">Edit</a>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Additional Addresses -->
+      {% if additional_addresses %}
+      <h3>Additional Addresses</h3>
+      <div class="address-list">
+        {% for address in additional_addresses %}
+        <div class="address-item">
+          <div class="address-details">
+            <p><strong>{{ user['first_name'] }} {{ user['last_name'] }}</strong></p>
+            <p class="convert-address">
+              {{ address['street'] }}, {{ address['barangay'] }}, {{ address['city'] }}, {{ address['province'] }} - {{ address['zip_code'] }}
+            </p>
+          </div>
+          <div class="address-actions">
+            <a href="{{ url_for('edit_new_address', address_id=address['id']) }}">Edit</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p>No additional addresses found.</p>
+      {% endif %}
+    </div>
+  </div>
+  
+  <footer>
+    <div class="footer-content">
+      <div class="footer-logo">
+        <img src="../static/images/MIDLOGO.png" alt="Logo">
+      </div>
+      <ul class="footer-links">
+        <li><a href="#" onclick="openAboutUsModal()">About Us</a></li>
+        <li><a href="#" onclick="openPrivacyPolicyModal()">Privacy Policy</a></li>
+        <li><a href="/customer-service">Customer Service</a></li>
+        <li><a href="#" onclick="openFAQsModal()">FAQs</a></li>
+      </ul>
+      <div class="footer-content-right">
+        <div class="contact-us">
+          <li>Contact us:</li>
+          <ul>Email: BBB@gmail.com</ul>
+          <ul>Phone #: 09690272222</ul>
+        </div>
+        <div class="follow-us">
+          <span>Follow us:</span>
+          <div class="social-icons">                   
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fas fa-envelope"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <script>
+    /**
+     * Converts an address string from code format to a full textual address.
+     * Assumed format: "street, barangay_code, city_code, province_code - zip_code"
+     */
+    function convertAddressCodes(address) {
+      // Split into the main address and the ZIP part.
+      const [addressPart, zip] = address.split(' - ');
+      if (!addressPart || !zip) return Promise.resolve(address);
+      
+      // Split the main part into its components (expecting four parts)
+      const parts = addressPart.split(',').map(s => s.trim());
+      if (parts.length !== 4) return Promise.resolve(address);
+      
+      const [street, barangayCode, cityCode, provinceCode] = parts;
+      
+      // Fetch province name.
+      return fetch('https://psgc.gitlab.io/api/provinces')
+        .then(response => response.json())
+        .then(provinces => {
+          const province = provinces.find(p => p.code === provinceCode);
+          const provinceName = province ? province.name : provinceCode;
+          // Fetch municipality (city) name for the province.
+          return fetch(`https://psgc.gitlab.io/api/provinces/${provinceCode}/municipalities`)
+            .then(response => response.json())
+            .then(municipalities => {
+              const municipality = municipalities.find(m => m.code === cityCode);
+              const municipalityName = municipality ? municipality.name : cityCode;
+              // Fetch barangay name for the city.
+              return fetch(`https://psgc.gitlab.io/api/municipalities/${cityCode}/barangays`)
+                .then(response => response.json())
+                .then(barangays => {
+                  const barangay = barangays.find(b => b.code === barangayCode);
+                  const barangayName = barangay ? barangay.name : barangayCode;
+                  // Assemble full address.
+                  return `${street}, ${barangayName}, ${municipalityName}, ${provinceName} - ${zip}`;
+                });
+            });
+        })
+        .catch(error => {
+          console.error("Error converting address codes:", error);
+          return address;
+        });
+    }
+
+    // Update all address elements with the full textual address.
+    document.addEventListener('DOMContentLoaded', function () {
+      const addressElements = document.querySelectorAll('.convert-address');
+      addressElements.forEach(el => {
+        const storedAddress = el.textContent.trim();
+        convertAddressCodes(storedAddress).then(fullAddress => {
+          el.textContent = fullAddress;
+        });
+      });
+    });
+  </script>
+</body>
+</html>

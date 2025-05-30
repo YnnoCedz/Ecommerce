@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <script>
+        function closeModal() {
+            document.getElementById('statusModal').style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+    <img src="../static/images/login-register.png" alt="Login Image" class="login-image">
+    <form action="/login" method="POST">
+        <div class="container">
+            <div class="input-group">
+                <h1>Sign In</h1>
+                <label for="email">Email:</label>
+                <input type="email" name="email" placeholder="Email" required><br>
+
+                <label for="password">Password:</label>
+                <input type="password" name="password" placeholder="Password" required><br>
+                <a href="/forgot-password" class="forgot-password-link">Forgot Password?</a>
+            </div>
+
+            <div class="login-button">
+                <input type="submit" class="login-btn" value="Log in">
+            </div>
+            
+            <div class="register-group">
+                <label for="signup">Don't have an Account?</label>
+                <button type="button" class="signup-btn" onclick="window.location.href='/select-role'">Sign Up</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Dynamic Status Modal -->
+    {% if modal_message %}
+    <div id="statusModal" class="modal" style="display:block;">
+        <div class="modal-content {% if modal_type == 'danger' %}p-danger{% elif modal_type == 'warning' %}p-warning{% elif modal_type == 'info' %}p-info{% endif %}">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>{{ modal_title }}</h2>
+            <p>{{ modal_message }}</p>
+            <button onclick="closeModal()">Close</button>
+        </div>
+    </div>
+    {% endif %}
+</body>
+</html>
