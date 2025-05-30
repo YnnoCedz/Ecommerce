@@ -1,0 +1,46 @@
+const deleteButtons = document.querySelectorAll('.delete-btn');
+        
+        // Function to delete item with confirmation and auto-refresh
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.getAttribute('data-id');
+                
+                // Confirmation prompt before deletion
+                if (confirm("Are you sure you want to delete this product?")) {
+                    fetch(`/delete_product/${productId}`, { method: 'POST' })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert("Product deleted successfully.");
+                                location.reload(); // Reloads the page to update the product list
+                            } else {
+                                alert("Failed to delete product.");
+                            }
+                        });
+                }
+            });
+        });
+
+
+        const restoreButtons = document.querySelectorAll('.restore-btn');
+        
+        // Function to delete item with confirmation and auto-refresh
+        restoreButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.getAttribute('data-id');
+                
+                // Confirmation prompt before deletion
+                if (confirm("Are you sure you want to Restore this product?")) {
+                    fetch(`/restore_product/${productId}`, { method: 'POST' })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert("Product restored successfully.");
+                                location.reload(); // Reloads the page to update the product list
+                            } else {
+                                alert("Failed to restore product.");
+                            }
+                        });
+                }
+            });
+        });

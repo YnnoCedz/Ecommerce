@@ -1,0 +1,277 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow-x: hidden;
+}
+
+/* Header styling */
+header {
+    height: 90px;
+    background-color: rgb(104, 26, 26);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    height: 70px;
+    margin-right: 15px;
+}
+
+/* Sidebar styling */
+.sidebar {
+    width: 250px;
+    background-color: rgb(104, 26, 26);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    padding-top: 80px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Sidebar list items styling */
+.sidebar ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.sidebar ul li {
+    padding: 15px;
+    color: white;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 10px 20px;
+}
+
+.sidebar ul li a:hover {
+    background-color: #575757;
+}
+
+/* Submenu styling */
+.submenu {
+    display: none;
+    background-color: #444;
+}
+
+.sidebar ul li .submenu li a {
+    padding-left: 40px;
+}
+
+.sidebar ul li:hover .submenu {
+    display: block;
+}
+
+/* Logout button styling */
+.logout-btn {
+    margin-top: auto;
+    padding: 20px;
+    background-color: #800000;
+}
+
+.logout-btn a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.logout-btn a:hover {
+    background-color: #575757;
+}
+
+/* Main content styling */
+.main-content {
+    margin-left: 260px;
+    padding: 20px;
+    background-color: #f4f4f4;
+    min-height: 100vh;
+}
+
+
+.nav-container{
+    display: flex;
+    margin: 0 auto;
+    width: 50%;
+    justify-content: center;
+}
+.nav {
+    display: flex;
+    justify-content: space-around;
+    background-color: #fff;
+    padding: 10px 0;
+    width: 80%;
+    border-radius: 30px;
+    align-content: center;
+    background-color: white;
+}
+.nav a{
+    background: none;
+    border: none;
+    font-size: 16px;
+    padding: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+
+}
+.nav a:hover, a:active {
+    color: #8b0000;
+}
+
+/* Search Bar Styling */
+.search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Aligns search bar to the right */
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    padding: 12px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 1px;
+}
+
+.search-bar button {
+    background-color: #8b0000;
+    padding: 9px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    color: white;
+}
+
+.search-bar button img {
+    width: 20px;
+    height: 20px;
+}
+/* table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px auto;
+}
+
+thead {
+    background-color: #f4f4f4;
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+}
+td .edit-btn, td .delete-btn, td .restore-btn, td .btn-success,td .btn-danger, td .btn-primary{
+    font-size: 15px;
+    text-align: right;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 10px;
+    padding: 10px;
+    background-color: #8b0000;
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+th {
+    background-color: #dad9d9;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.approve-btn {
+    background-color: green;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background-color: red;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+.status-label {
+    color: green;
+    font-weight: bold;
+    padding: 5px;
+}
+.low-stock {
+    color: red;
+    font-weight: bold;
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Black background with opacity */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.modal-buttons .btn-success {
+    background-color: green;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-buttons .btn-danger {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

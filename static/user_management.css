@@ -1,0 +1,305 @@
+/* Basic reset and styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Header styling */
+header {
+    height: 90px;
+    background-color: rgb(104, 26, 26);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    height: 70px;
+    margin-right: 15px;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Sidebar styling */
+.sidebar {
+    width: 250px;
+    background-color: rgb(104, 26, 26);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    padding-top: 80px; /* Space for header */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.sidebar ul li {
+    padding: 15px;
+    color: white;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 10px 20px;
+    border-radius: 4px;
+}
+
+.sidebar ul li a:hover {
+    background-color: #575757;
+}
+
+/* Submenu styling */
+.submenu {
+    display: none;
+    background-color: #444;
+}
+
+.sidebar ul li .submenu li a {
+    padding-left: 40px;
+}
+
+.sidebar ul li:hover .submenu {
+    display: block;
+}
+
+/* Main content styling */
+main {
+    margin-left: 260px; /* Space for sidebar */
+    padding: 20px;
+    background-color: #f4f4f4;
+    min-height: 100vh;
+}
+
+h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+/* Common table styling for both users and sellers */
+.table-container {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-table,
+.seller-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.user-table th,
+.user-table td,
+.seller-table th,
+.seller-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.user-table th,
+.seller-table th {
+    background-color: #f2f2f2;
+    color: #333;
+    text-align: center;
+}
+
+.user-table tr:nth-child(even),
+.seller-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.user-table tr:hover,
+.seller-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.user-table .btn,
+.seller-table .btn {
+    padding: 8px 16px;
+    margin: 5px;
+    background-color: rgb(104, 26, 26);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.user-table .btn:hover,
+.seller-table .btn:hover {
+    background-color: #067841;
+}
+
+/* Modal for confirmation */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    main {
+        margin-left: 220px;
+    }
+
+    .user-table th,
+    .user-table td,
+    .seller-table th,
+    .seller-table td {
+        padding: 10px;
+    }
+
+    .user-table .btn,
+    .seller-table .btn {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+}
+
+/* Logout button styling */
+.logout-btn {
+    margin-top: auto;
+    padding: 20px;
+    background-color: #800000;
+}
+
+.logout-btn a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.logout-btn a:hover {
+    background-color: #575757;
+}
+
+/* Profile container styling */
+.profile-container{
+    display: flex;
+    border-color: rgb(104, 26, 26);
+    border: solid;
+    border-width: 2px;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+
+
+.credentials{
+    margin-top: 30px;
+}
+.credentials img{
+    max-width: 400px;
+    max-height: 300px;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.profile-pic{
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    padding: 10px;
+}
+.profile-details{
+    margin: 30px;
+    font-size: 20px;
+}
+
+
+.profile-details p {
+    margin: 5px 0;
+    font-size: 1.1em;
+}
+
+.profile-details p strong {
+    color: #333;
+}
+.store-credentials{
+    margin-top: 30px;
+}
+.store-credentials img{
+    max-width: 500px;
+    max-width: 400px;
+}
+
+.btn {
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    background-color: #8b0000;
+    transition: background 0.3s;
+}

@@ -1,0 +1,297 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow-y: hidden;
+}
+body{
+    margin-top: 50px;
+    background: white;
+    display: flex;
+}
+img{
+    height: 100vh;
+}
+.container{
+    margin: 80px 0 auto;
+    width: 700px;
+}
+
+h1{
+    margin: 0 auto 200px;
+    font-size: 45px;
+    margin-bottom: 150px;
+}
+.input-group {
+    text-align: center;
+    align-content: center;
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.input-group label{
+    width: 200px;
+    display: inline-block; 
+    text-align: right;
+}
+.input-group input{
+    width: 400px;
+    height: 30px;
+    font-size: 18px;
+    padding: 8px auto;
+    outline: none;
+    padding: 12px 20px;
+    margin-bottom: 10px;
+    margin-left: 50px;
+    border-radius: 5px;
+    border-color: rgb(170, 49, 49);
+    border-style: solid;
+    display: inline-block;
+}
+.login-button input{
+    margin-top: 50px;
+    margin-left: 255px;
+    margin-bottom: 10px;
+    font-size: 22px ;
+    align-items: center;
+    width: 445px;
+    text-decoration: none;
+    padding: 10px 10px;
+    border-color: rgb(170, 49, 49);
+    border-radius: 5px;
+}
+
+.login-btn:hover {
+    background: rgb(207, 86, 86);
+    color: white;
+    padding: 10px 10px;
+    text-decoration: none;
+}
+
+.signup-btn {
+    background: rgb(207, 86, 86);
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin-left: 1px;
+    text-decoration: none;
+    border-radius: 5px;
+
+}
+.register-group a {
+    width: 200px;
+}
+.register-group label {
+    margin-left: 300px;
+    align-items: center;
+    width: 200px;
+}
+.recover {
+    align-items: center;
+    font-size: 12px;
+    text-decoration: none;
+    color: inherit;
+}
+a{
+    margin-left: 230px;
+}
+
+
+
+/* General Modal Styles */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto; /* Center the modal */
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Add fade-in effect */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Close Button */
+.modal-content .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.modal-content .close:hover {
+    color: #333;
+}
+
+/* Title */
+.modal-content h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+/* Message Text */
+.modal-content p {
+    font-size: 16px;
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+/* Specific Flash Message Styles */
+.modal-content.p-danger {
+    background-color: #f8d7da; /* Light red */
+    border: 1px solid #f5c6cb;
+    color: #721c24; /* Dark red for text */
+}
+
+.modal-content.p-warning {
+    background-color: #fff3cd; /* Light yellow */
+    border: 1px solid #ffeeba;
+    color: #856404; /* Dark yellow for text */
+}
+
+.modal-content.p-info {
+    background-color: #d1ecf1; 
+    border: 1px solid #bee5eb;
+    color: #0c5460;
+}
+
+/* Button Styles */
+.modal-content button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff; 
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-content button:hover {
+    background-color: #0056b3; 
+}
+    /* Forgot Password Container */
+    .forgot-password-container {
+        width: 100%;
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+    
+    .forgot-password-container h1 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+    
+    .forgot-password-container p {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 20px;
+    }
+    
+    .forgot-password-container form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .forgot-password-container input {
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        width: 90%;
+        margin: 0 auto;
+
+    }
+    
+    .forgot-password-container .submit-btn {
+        padding: 10px;
+        font-size: 16px;
+        color: white;
+        background-color: rgb(104, 26, 26);
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        width: 90%;
+        margin: 0 auto;
+
+    }
+    
+    .forgot-password-container .submit-btn:hover {
+        background-color: rgb(104, 26, 26);
+    }
+    
+    .forgot-password-container .back-to-login {
+        display: inline-block;
+        margin-top: 20px;
+        font-size: 14px;
+        color: #007bff;
+        text-decoration: none;
+        margin: 20px auto;
+
+    }
+    
+    .forgot-password-container .back-to-login:hover {
+        text-decoration: underline;
+    }
+    
+    /* Flash Messages */
+    .flash-messages p {
+        font-size: 14px;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 4px;
+        text-align: center;
+    }
+    
+    .flash-messages p.info {
+        background-color: #d9edf7;
+        color: #31708f;
+    }
+    
+    .flash-messages p.danger {
+        background-color: #f2dede;
+        color: #a94442;
+    }
+    

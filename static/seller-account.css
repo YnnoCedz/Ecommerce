@@ -1,0 +1,311 @@
+/* General reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Color Variables */
+:root {
+    --main-color: #681a1a; /* Dark Red */
+    --secondary-color: #444; /* Dark Gray */
+    --hover-color: #575757; /* Lighter Gray */
+    --modal-overlay: rgba(0, 0, 0, 0.6); /* Modal overlay */
+    --modal-background: #fff; /* Modal background */
+    --success-color: #4CAF50; /* Confirm button color */
+    --error-color: #f44336; /* Cancel button color */
+}
+
+/* Header styling */
+header {
+    height: 90px;
+    background-color: var(--main-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    height: 70px;
+    margin-right: 15px;
+}
+
+/* Sidebar styling */
+.sidebar {
+    width: 250px;
+    background-color: var(--main-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    padding-top: 80px; /* Space for header */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Sidebar list items styling */
+.sidebar ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.sidebar ul li {
+    padding: 15px;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 10px 20px;
+}
+
+.sidebar ul li a:hover {
+    background-color: var(--hover-color);
+}
+
+/* Submenu styling */
+.submenu {
+    display: none;
+    background-color: var(--secondary-color);
+}
+
+.sidebar ul li .submenu li a {
+    padding-left: 40px;
+}
+
+.sidebar ul li:hover .submenu {
+    display: block;
+}
+
+/* Logout button styling */
+.logout-btn {
+    margin-top: auto;
+    padding: 20px;
+    background-color: #800000;
+}
+
+.logout-btn a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.logout-btn a:hover {
+    background-color: var(--hover-color);
+}
+
+/* Main content styling */
+.main-content {
+    margin-left: 260px;
+    padding: 20px;
+    background-color: #f4f4f4;
+    min-height: 100vh;
+}
+
+/* Account settings section */
+.account-settings {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.account-settings h2 {
+    font-size: 24px;
+    color: var(--main-color);
+    margin-bottom: 20px;
+}
+
+/* Settings section */
+.settings-section {
+    margin-bottom: 30px;
+}
+
+.settings-section h3 {
+    font-size: 20px;
+    color: var(--main-color);
+    margin-bottom: 15px;
+}
+
+/* Form styling */
+.settings-form .form-group {
+    margin-bottom: 15px;
+}
+
+.settings-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.settings-form input, .settings-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Button styling */
+button.submit-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--main-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button.submit-btn:hover {
+    background-color: #8a2424;
+}
+
+/* Modal styling */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--modal-overlay);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--modal-background);
+    padding: 20px;
+    border-radius: 8px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.close-btn {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--main-color);
+    cursor: pointer;
+    float: right;
+}
+
+.confirm-btn, .cancel-btn {
+    padding: 10px 15px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.confirm-btn {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.cancel-btn {
+    background-color: var(--error-color);
+    color: white;
+}
+
+/* Success Modal Styling */
+#successModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--modal-overlay);
+    justify-content: center;
+    align-items: center;
+}
+
+#successModal .modal-content {
+    background-color: var(--success-color);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease-out;
+}
+
+#successModal h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+#successModal p {
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+#successModal .confirm-btn {
+    background-color: #ffffff;
+    color: var(--success-color);
+    border: 2px solid white;
+    padding: 8px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#successModal .confirm-btn:hover {
+    background-color: var(--success-color);
+    color: white;
+}
+
+/* Animation for modal appearance */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+    
+    .main-content {
+        margin-left: 220px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .settings-form input, .settings-form textarea {
+        font-size: 14px;
+    }
+
+    button.submit-btn {
+        font-size: 14px;
+    }
+}
